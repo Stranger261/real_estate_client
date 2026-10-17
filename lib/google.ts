@@ -1,4 +1,3 @@
-// lib/google.ts
 export class GoogleCancelled extends Error {}
 
 let configured = false;
@@ -48,5 +47,14 @@ export const getGoogleIdToken = async (): Promise<string> => {
       }
     }
     throw error;
+  }
+};
+
+export const googleSignOut = async () => {
+  try {
+    const { GoogleSignin } = await loadGoogle();
+    await GoogleSignin.signOut();
+  } catch {
+    //
   }
 };

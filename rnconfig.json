@@ -1,0 +1,187 @@
+{
+  root: [32m'C:\\dev\\real_state_client'[39m,
+  reactNativePath: [32m'C:\\dev\\real_state_client\\node_modules\\react-native'[39m,
+  dependencies: [Object: null prototype] {
+    [32m'@react-native-google-signin/google-signin'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\@react-native-google-signin\\google-signin'[39m,
+      name: [32m'@react-native-google-signin/google-signin'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\@react-native-google-signin\\google-signin\\android'[39m,
+          packageImportPath: [32m'import com.reactnativegooglesignin.RNGoogleSigninPackage;'[39m,
+          packageInstance: [32m'new RNGoogleSigninPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'RNGoogleSignInCGen'[39m,
+          componentDescriptors: [ [32m'RNGoogleSigninButtonComponentDescriptor'[39m ],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/@react-native-google-signin/google-signin/android/build/generated/source/codegen/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    expo: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\expo'[39m,
+      name: [32m'expo'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\expo\\android'[39m,
+          packageImportPath: [32m'import expo.modules.ExpoModulesPackage;'[39m,
+          packageInstance: [32m'new ExpoModulesPackage()'[39m,
+          buildTypes: [],
+          componentDescriptors: [],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/expo/android/build/generated/source/codegen/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    [32m'react-native-gesture-handler'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-gesture-handler'[39m,
+      name: [32m'react-native-gesture-handler'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-gesture-handler\\android'[39m,
+          packageImportPath: [32m'import com.swmansion.gesturehandler.RNGestureHandlerPackage;'[39m,
+          packageInstance: [32m'new RNGestureHandlerPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'rngesturehandler_codegen'[39m,
+          componentDescriptors: [
+            [32m'RNGestureHandlerButtonComponentDescriptor'[39m,
+            [32m'RNGestureHandlerRootViewComponentDescriptor'[39m
+          ],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/react-native-gesture-handler/android/build/generated/source/codegen/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    [32m'react-native-keyboard-controller'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-keyboard-controller'[39m,
+      name: [32m'react-native-keyboard-controller'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-keyboard-controller\\android'[39m,
+          packageImportPath: [32m'import com.reactnativekeyboardcontroller.KeyboardControllerPackage;'[39m,
+          packageInstance: [32m'new KeyboardControllerPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'reactnativekeyboardcontroller'[39m,
+          componentDescriptors: [
+            [32m'KeyboardControllerViewComponentDescriptor'[39m,
+            [32m'KeyboardGestureAreaComponentDescriptor'[39m,
+            [32m'OverKeyboardViewComponentDescriptor'[39m,
+            [32m'KeyboardBackgroundViewComponentDescriptor'[39m
+          ],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/react-native-keyboard-controller/android/src/main/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    [32m'react-native-reanimated'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-reanimated'[39m,
+      name: [32m'react-native-reanimated'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-reanimated\\android'[39m,
+          packageImportPath: [32m'import com.swmansion.reanimated.ReanimatedPackage;'[39m,
+          packageInstance: [32m'new ReanimatedPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'rnreanimated'[39m,
+          componentDescriptors: [],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/react-native-reanimated/android/build/generated/source/codegen/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    [32m'react-native-safe-area-context'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-safe-area-context'[39m,
+      name: [32m'react-native-safe-area-context'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-safe-area-context\\android'[39m,
+          packageImportPath: [32m'import com.th3rdwave.safeareacontext.SafeAreaContextPackage;'[39m,
+          packageInstance: [32m'new SafeAreaContextPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'safeareacontext'[39m,
+          componentDescriptors: [
+            [32m'RNCSafeAreaProviderComponentDescriptor'[39m,
+            [32m'RNCSafeAreaViewComponentDescriptor'[39m
+          ],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    [32m'react-native-screens'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-screens'[39m,
+      name: [32m'react-native-screens'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-screens\\android'[39m,
+          packageImportPath: [32m'import com.swmansion.rnscreens.RNScreensPackage;'[39m,
+          packageInstance: [32m'new RNScreensPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'rnscreens'[39m,
+          componentDescriptors: [
+            [32m'RNSFullWindowOverlayComponentDescriptor'[39m,
+            [32m'RNSScreenContainerComponentDescriptor'[39m,
+            [32m'RNSScreenNavigationContainerComponentDescriptor'[39m,
+            [32m'RNSScreenStackHeaderConfigComponentDescriptor'[39m,
+            [32m'RNSScreenStackHeaderSubviewComponentDescriptor'[39m,
+            [32m'RNSScreenStackComponentDescriptor'[39m,
+            [32m'RNSSearchBarComponentDescriptor'[39m,
+            [32m'RNSScreenComponentDescriptor'[39m,
+            [32m'RNSScreenFooterComponentDescriptor'[39m,
+            [32m'RNSScreenContentWrapperComponentDescriptor'[39m,
+            [32m'RNSModalScreenComponentDescriptor'[39m,
+            [32m'RNSBottomTabsComponentDescriptor'[39m
+          ],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    },
+    [32m'react-native-worklets'[39m: {
+      root: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-worklets'[39m,
+      name: [32m'react-native-worklets'[39m,
+      platforms: {
+        android: {
+          sourceDir: [32m'C:\\dev\\real_state_client\\node_modules\\react-native-worklets\\android'[39m,
+          packageImportPath: [32m'import com.swmansion.worklets.WorkletsPackage;'[39m,
+          packageInstance: [32m'new WorkletsPackage()'[39m,
+          buildTypes: [],
+          libraryName: [32m'rnworklets'[39m,
+          componentDescriptors: [],
+          cmakeListsPath: [32m'C:/dev/real_state_client/node_modules/react-native-worklets/android/build/generated/source/codegen/jni/CMakeLists.txt'[39m,
+          cxxModuleCMakeListsModuleName: [1mnull[22m,
+          cxxModuleCMakeListsPath: [1mnull[22m,
+          cxxModuleHeaderName: [1mnull[22m,
+          isPureCxxDependency: [33mfalse[39m
+        }
+      }
+    }
+  },
+  project: {
+    android: {
+      packageName: [32m'com.hubahay.app'[39m,
+      sourceDir: [32m'C:\\dev\\real_state_client\\android'[39m
+    }
+  }
+}

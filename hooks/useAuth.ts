@@ -1,6 +1,6 @@
 import { useAuthStore } from "./../stores/authStore";
 import { errorMessage } from "@/lib/errors";
-import { getGoogleIdToken } from "@/lib/google";
+import { getGoogleIdToken, googleSignOut } from "@/lib/google";
 import { $api } from "@/lib/query";
 import { useRouter } from "expo-router";
 
@@ -15,12 +15,10 @@ export const useAuth = () => {
   const login = $api.useMutation("post", "/v1/auth/login", {
     onSuccess: async ({ data }) => {
       if (data.requiresVerification) {
-        useAuthStore.getState().setPending({
+        useAuthStore.getState().beginVerification({
           email: data.email,
           token: data.pendingToken!,
-          codeSent: true,
         });
-        // router.push('/verify-otp')
         return;
       }
       if (!data.tokens) throw new Error("The server did not provide token.");
@@ -31,12 +29,10 @@ export const useAuth = () => {
 
   const register = $api.useMutation("post", "/v1/auth/register", {
     onSuccess: async ({ data }) => {
-      useAuthStore.getState().setPending({
+      useAuthStore.getState().beginVerification({
         email: data.email,
         token: data.pendingToken!,
-        codeSent: true,
       });
-      // router.push("/verify-otp");
     },
   });
 
@@ -51,7 +47,9 @@ export const useAuth = () => {
   const logout = $api.useMutation("post", "/v1/auth/logout", {
     onSuccess: async () => {
       await useAuthStore.getState().signOut();
-      router.push("/");
+      await useAuthStore.getState().signOut();
+      await googleSignOut();
+      router.replace("/");
     },
   });
 

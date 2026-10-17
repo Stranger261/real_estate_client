@@ -1,5 +1,5 @@
 import { Image, Text, TextInput, View } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./Button";
 import icons from "@/constants/icons";
 import { FormInput } from "./FormInput";
@@ -36,6 +36,10 @@ const AuthForm = ({ form }: FormProp) => {
   const confirmRef = useRef<TextInput>(null);
 
   const isLogin = formType === "login";
+  useEffect(() => {
+    setShowConfirmPassword(false);
+    setShowPassword(false);
+  }, [isLogin]);
 
   return (
     <View className="gap-4">

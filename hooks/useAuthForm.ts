@@ -2,10 +2,6 @@ import { useState } from "react";
 import * as Haptics from "expo-haptics";
 import { useAuth } from "./useAuth";
 import { errorMessage } from "@/lib/errors";
-import {
-  GoogleSignin,
-  isSuccessResponse,
-} from "@react-native-google-signin/google-signin";
 import { GoogleCancelled } from "@/lib/google";
 
 type Credentials = { email: string; password: string; confirmPassword: string };
@@ -50,7 +46,6 @@ export const useAuthForm = () => {
   const [formType, setFormType] = useState<FormType>("login");
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string | null>(null);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const auth = useAuth();
   const isSubmitting = auth.isPending;

@@ -7,6 +7,7 @@ import { StatusBar } from "react-native";
 import { useAuthStore } from "@/stores/authStore";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
+import { AuthGate } from "@/components/AuthGate";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -39,6 +40,7 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <AuthGate />
       </KeyboardProvider>
     </QueryClientProvider>
   );

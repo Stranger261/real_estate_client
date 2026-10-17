@@ -9,18 +9,9 @@ import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const SignIn = () => {
   const form = useAuthForm();
-
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        "703633393398-lmd1h3dto4ltegbsesjhn5m3h59ngon5.apps.googleusercontent.com",
-      profileImageSize: 150,
-    });
-  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -59,7 +50,7 @@ const SignIn = () => {
           <LineSeparator middleText="OR" />
           <View className="mt-2">
             <Button
-              onPress={() => {}}
+              onPress={form.oauthLogin}
               label="Sign in with google"
               icon={<Image source={icons.google} className="w-5 h-5" />}
               className="bg-primary-100 shadow-md shadow-blue-300 rounded-full py-3"

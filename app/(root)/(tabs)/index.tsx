@@ -3,7 +3,7 @@ import { HomeHeader } from "@/components/HomeHeader";
 import { ListingCard } from "@/components/ListingCard";
 import { errorMessage } from "@/lib/errors";
 import { $api } from "@/lib/query";
-import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {

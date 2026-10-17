@@ -3,12 +3,13 @@ import { Image, Text, View } from "react-native";
 import { Button } from "./Button";
 import { useAuthStore } from "@/stores/authStore";
 import { useMe } from "@/hooks/useMe";
+import { useAuth } from "@/hooks/useAuth";
 
 export const HomeHeader = () => {
   const router = useRouter();
   const status = useAuthStore((s) => s.status);
-  const signOut = useAuthStore((s) => s.signOut);
   const { data: me, isLoading } = useMe();
+  const auth = useAuth();
 
   const loading = status === "loading" || isLoading;
   const user = status === "authenticated" ? me : undefined;
@@ -66,7 +67,7 @@ export const HomeHeader = () => {
       ) : user ? (
         <Button
           label="Log out"
-          onPress={signOut}
+          onPress={auth.logout}
           className="rounded-full border border-primary-300 px-4 py-2"
           textClassName="font-rubik-medium text-sm text-primary-300"
         />
