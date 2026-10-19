@@ -9,9 +9,11 @@ import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useAuth } from "@/hooks/useAuth";
 
 const SignIn = () => {
   const form = useAuthForm();
+  const auth = useAuth();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -50,11 +52,12 @@ const SignIn = () => {
           <LineSeparator middleText="OR" />
           <View className="mt-2">
             <Button
-              onPress={form.oauthLogin}
+              onPress={form.googleLogin}
               label="Sign in with google"
               icon={<Image source={icons.google} className="w-5 h-5" />}
               className="bg-primary-100 shadow-md shadow-blue-300 rounded-full py-3"
               textClassName="text-lg font-rubik-medium"
+              loading={auth.isGoogleLoading}
             />
           </View>
         </View>

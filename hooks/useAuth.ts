@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuthStore } from "./../stores/authStore";
 import { errorMessage } from "@/lib/errors";
 import { getGoogleIdToken, googleSignOut } from "@/lib/google";
@@ -10,6 +11,7 @@ export interface Cred {
 }
 
 export const useAuth = () => {
+  const [googleBusy, setGoogleBusy] = useState(false);
   const router = useRouter();
 
   const login = $api.useMutation("post", "/v1/auth/login", {
@@ -68,13 +70,19 @@ export const useAuth = () => {
       : null,
 
     googleLogin: async () => {
-      const idToken = await getGoogleIdToken();
-      return googleLogin.mutateAsync({ body: { idToken } });
+      setGoogleBusy(true);
+      try {
+        const idToken = await getGoogleIdToken();
+        return googleLogin.mutateAsync({ body: { idToken } });
+      } finally {
+        setGoogleBusy(false);
+      }
     },
 
     logout: () => logout.mutateAsync(),
     logoutError: logout.error,
 
+    isGoogleLoading: googleBusy,
     isPending:
       login.isPending ||
       register.isPending ||

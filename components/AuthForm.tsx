@@ -12,6 +12,7 @@ import Animated, {
   LinearTransition,
 } from "react-native-reanimated";
 import { useAuthForm } from "@/hooks/useAuthForm";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface FormProp {
   form: ReturnType<typeof useAuthForm>;
@@ -29,6 +30,7 @@ const AuthForm = ({ form }: FormProp) => {
     toggleForm,
     submit,
   } = form;
+  const { isGoogleLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -62,6 +64,7 @@ const AuthForm = ({ form }: FormProp) => {
             <Ionicons name="at" color="#555" size={22} />
           </IconButton>
         }
+        editable={!isSubmitting || isGoogleLoading}
       />
 
       <FormInput
@@ -147,6 +150,7 @@ const AuthForm = ({ form }: FormProp) => {
               <Text
                 className="font-rubik-medium underline text-primary-300"
                 onPress={toggleForm}
+                disabled={isSubmitting || isGoogleLoading}
               >
                 Register here.
               </Text>
@@ -183,7 +187,7 @@ const AuthForm = ({ form }: FormProp) => {
       >
         <Button
           onPress={submit}
-          loading={isSubmitting}
+          loading={isSubmitting && !isGoogleLoading}
           rightIcon={<Image source={icons.rightArrow} className="w-4 h-4" />}
           label={formType === "login" ? "Login" : "Create an account"}
           className="bg-primary-300 rounded-full py-3 pr-4 pl-5"

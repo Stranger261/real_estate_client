@@ -120,7 +120,7 @@ export const useAuthForm = () => {
     }
   };
 
-  const oauthLogin = async () => {
+  const googleLogin = async () => {
     if (isSubmitting) return;
     setFormError(null);
 
@@ -149,7 +149,7 @@ export const useAuthForm = () => {
     validateOnBlur,
     toggleForm,
     submit,
-    oauthLogin,
+    googleLogin,
     logout,
   };
 };
