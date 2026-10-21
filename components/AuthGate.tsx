@@ -1,25 +1,31 @@
 import { useAuthStore } from "@/stores/authStore";
-import { useRouter, useSegments } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { useEffect } from "react";
 
-const VERIFY_ROUTE = "verify-otp";
+const VERIFY = "/verify-otp";
+const LOGIN = "/auth-screen";
+const TAB_PATHS = ["/home", "/explore", "/favorites", "/profile"];
 
 export const AuthGate = () => {
   const router = useRouter();
-  const path = (useSegments() as string[]).join("/");
+  const pathname = usePathname();
   const status = useAuthStore((s) => s.status);
 
   useEffect(() => {
     if (status === "loading") return;
-    const segments = path.split("/");
-    const onVerify = segments.includes(VERIFY_ROUTE);
-
-    if (status === "pending" && !onVerify) {
-      router.replace("/verify-otp");
-    } else if (status === "unauthenticated" && onVerify) {
-      router.replace("/auth-screen");
+    const onTabs = TAB_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(`${p}/`),
+    );
+    if (status === "pending") {
+      if (pathname !== VERIFY) router.replace(VERIFY);
+    } else if (status === "authenticated") {
+      if (pathname === "/" || pathname === LOGIN || pathname === VERIFY)
+        router.replace("/home");
+    } else if (status === "unauthenticated") {
+      if (onTabs) router.replace("/");
+      else if (pathname === VERIFY) router.replace(LOGIN);
     }
-  }, [status, router, path]);
+  }, [status, pathname, router]);
 
   return null;
 };

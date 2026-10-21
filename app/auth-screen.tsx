@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Button } from "@/components/Button";
 import AuthForm from "@/components/AuthForm";
 import icons from "@/constants/icons";
@@ -6,17 +5,29 @@ import images from "@/constants/images";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import LineSeparator from "@/components/LineSeparator";
 import { Image, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useAuth } from "@/hooks/useAuth";
+import { BackButton } from "@/components/BackButton";
+import { router } from "expo-router";
 
 const SignIn = () => {
   const form = useAuthForm();
   const auth = useAuth();
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <BackButton
+        onGoBack={() =>
+          router.canGoBack() ? router.back() : router.replace("/")
+        }
+        insets={insets}
+      />
       <KeyboardAwareScrollView
         contentContainerClassName="flex-grow pt-5 pb-10"
         keyboardShouldPersistTaps="handled"

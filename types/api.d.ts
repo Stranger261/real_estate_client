@@ -65,6 +65,7 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
+                    targetType?: "ROOM" | "UNIT" | "BUILDING" | "PROPERTY";
                     listingType?: "SALE" | "RENT";
                     propertyType?: "HOUSE" | "TOWNHOUSE" | "LAND" | "COMMERCIAL";
                     minPrice?: number;
@@ -79,6 +80,7 @@ export interface paths {
                     order?: "asc" | "desc";
                     page?: number;
                     pageSize?: number;
+                    q?: string;
                 };
                 header?: never;
                 path?: never;
@@ -1150,6 +1152,56 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/favorites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the current user's favorite listings */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                favorites: components["schemas"]["ListingSummary"][];
+                            };
+                        };
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;

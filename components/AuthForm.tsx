@@ -13,6 +13,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { useAuth } from "@/hooks/useAuth";
+import { BlockingOverlay } from "./BlockingOverlay";
 
 export interface FormProp {
   form: ReturnType<typeof useAuthForm>;
@@ -45,6 +46,13 @@ const AuthForm = ({ form }: FormProp) => {
 
   return (
     <View className="gap-4">
+      {isSubmitting && (
+        <View className="fex-1">
+          <BlockingOverlay
+            label={isGoogleLoading ? "Opening Google..." : "Please wait..."}
+          />
+        </View>
+      )}
       <FormInput
         value={credentials.email}
         onChangeText={(text) => updateCredentials("email", text)}

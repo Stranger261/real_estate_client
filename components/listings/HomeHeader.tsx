@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { Image, Text, View } from "react-native";
-import { Button } from "./Button";
+import { Button } from "../Button";
 import { useAuthStore } from "@/stores/authStore";
 import { useMe } from "@/hooks/useMe";
 import { useAuth } from "@/hooks/useAuth";

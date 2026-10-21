@@ -48,7 +48,10 @@ export const useFavorite = (listingId: string) => {
   ) => {
     if (context?.previous) queryClient.setQueryData(queryKey, context.previous);
   };
-  const refresh = () => queryClient.invalidateQueries({ queryKey });
+  const refresh = () => {
+    queryClient.invalidateQueries({ queryKey });
+    queryClient.invalidateQueries({ queryKey: ["get", "/v1/favorites"] });
+  };
 
   const add = $api.useMutation("post", "/v1/favorites/{listingId}", {
     onMutate: () => setFavorited(true),
@@ -72,4 +75,20 @@ export const useFavorite = (listingId: string) => {
   };
 
   return { toggle };
+};
+
+export const useFavoriteListings = () => {
+  const status = useAuthStore((s) => s.status);
+
+  return $api.useQuery(
+    "get",
+    "/v1/favorites",
+    {},
+    {
+      enabled: status === "authenticated",
+      select: (res) => {
+        return res.data.favorites;
+      },
+    },
+  );
 };

@@ -1,16 +1,4 @@
-import { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  ScrollView,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { BackButton } from "@/components/BackButton";
 import { Button } from "@/components/Button";
 import { IconButton } from "@/components/IconButton";
 import { useFavorite } from "@/hooks/useFavorite";
@@ -27,6 +15,19 @@ import {
   getTypeLabel,
   isVerified,
 } from "@/utils/listing";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  ScrollView,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HERO_HEIGHT = 300;
 const UNAVAILABLE_TEXT: Record<string, string> = {
@@ -34,7 +35,7 @@ const UNAVAILABLE_TEXT: Record<string, string> = {
   RENTED: "This property has been rented.",
 };
 
-export default function ListingDetailScreen() {
+const Property = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -49,18 +50,10 @@ export default function ListingDetailScreen() {
   const goBack = () =>
     router.canGoBack() ? router.back() : router.replace("/");
 
-  const backButton = (
-    <View className="absolute left-5 z-10" style={{ top: insets.top + 8 }}>
-      <IconButton onPress={goBack} className="bg-white/90">
-        <Ionicons name="arrow-back" size={22} color="#191d31" />
-      </IconButton>
-    </View>
-  );
-
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-accent-100">
-        {backButton}
+        <BackButton onGoBack={goBack} insets={insets} />
         <ActivityIndicator color="#0061FF" />
       </View>
     );
@@ -69,7 +62,7 @@ export default function ListingDetailScreen() {
   if (error || !listing) {
     return (
       <View className="flex-1 items-center justify-center gap-4 bg-accent-100 px-8">
-        {backButton}
+        <BackButton onGoBack={goBack} insets={insets} />
         <Text className="text-center font-rubik text-base text-danger">
           {errorMessage(error, "Could not load this listing.")}
         </Text>
@@ -106,7 +99,7 @@ export default function ListingDetailScreen() {
 
   return (
     <View className="flex-1 bg-accent-100">
-      {backButton}
+      <BackButton onGoBack={goBack} insets={insets} />
       <View className="absolute right-5 z-10" style={{ top: insets.top + 8 }}>
         <IconButton
           onPress={() => favorite.toggle(isFavorited)}
@@ -125,7 +118,7 @@ export default function ListingDetailScreen() {
         contentContainerStyle={{ paddingBottom: 24 }}
       >
         {images.length > 0 ? (
-          <View>
+          <View className="bg-blue-600">
             <FlatList
               data={images}
               horizontal
@@ -159,7 +152,6 @@ export default function ListingDetailScreen() {
             <Ionicons name="image-outline" size={40} color="#8C8E98" />
           </View>
         )}
-
         <View className="gap-5 px-5 pt-5">
           {unavailable && (
             <View className="rounded-xl bg-danger/10 px-4 py-3">
@@ -186,7 +178,6 @@ export default function ListingDetailScreen() {
                 </View>
               )}
             </View>
-
             <Text className="font-rubik-bold text-2xl text-black-300">
               {listing.title}
             </Text>
@@ -228,7 +219,6 @@ export default function ListingDetailScreen() {
               ))}
             </View>
           )}
-
           {!!listing.description && (
             <View className="gap-2">
               <Text className="font-rubik-semibold text-lg text-black-300">
@@ -239,7 +229,6 @@ export default function ListingDetailScreen() {
               </Text>
             </View>
           )}
-
           <View className="flex-row items-center justify-between rounded-xl bg-white px-4 py-3">
             <View>
               <Text className="font-rubik text-xs text-black-100">
@@ -273,4 +262,6 @@ export default function ListingDetailScreen() {
       </View>
     </View>
   );
-}
+};
+
+export default Property;

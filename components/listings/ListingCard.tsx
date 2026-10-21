@@ -11,7 +11,7 @@ export const ListingCard = ({ listing }: { listing: ListingSummary }) => {
   return (
     <Pressable
       onPress={() => router.push(`/listings/${listing.id}`)}
-      className="mb-5 rounded-2xl bg-white p-3 active:opacity-90"
+      className="mb-5 rounded-2xl bg-gray-200 p-2 active:opacity-90"
     >
       {thumbnail ? (
         <Image source={{ uri: thumbnail }} className="h-44 w-full rounded-xl" />
@@ -27,7 +27,7 @@ export const ListingCard = ({ listing }: { listing: ListingSummary }) => {
             </Text>
           </View>
           {listing.city && (
-            <Text className="font-rubik text-xs text-black-200">
+            <Text className="font-rubik text-xs text-black">
               {listing.city}
             </Text>
           )}

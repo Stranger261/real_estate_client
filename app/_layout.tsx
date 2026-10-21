@@ -18,6 +18,8 @@ export default function RootLayout() {
     "Rubik-Regular": require("../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-SemiBold": require("../assets/fonts/Rubik-SemiBold.ttf"),
   });
+  const authStatus = useAuthStore((s) => s.status);
+  const ready = fontsLoaded && authStatus !== "loading";
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -26,10 +28,15 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
+    if (ready) SplashScreen.hideAsync();
+  }, [ready]);
+
+  useEffect(() => {
     useAuthStore.getState().bootstrap();
   }, []);
 
   if (!fontsLoaded) return null;
+  if (!ready) return null;
 
   return (
     <QueryClientProvider client={queryClient}>
