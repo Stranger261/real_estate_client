@@ -1,6 +1,8 @@
 import { BackButton } from "@/components/BackButton";
 import { Button } from "@/components/Button";
+import { ErrorState } from "@/components/ErrorState";
 import { IconButton } from "@/components/IconButton";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { useFavorite } from "@/hooks/useFavorite";
 import { useListing } from "@/hooks/useListing";
 import { useMe } from "@/hooks/useMe";
@@ -50,27 +52,20 @@ const Property = () => {
   const goBack = () =>
     router.canGoBack() ? router.back() : router.replace("/");
 
-  if (isLoading) {
+  if (isLoading)
     return (
-      <View className="flex-1 items-center justify-center bg-accent-100">
+      <View className="flex-1 bg-accent-100">
         <BackButton onGoBack={goBack} insets={insets} />
-        <ActivityIndicator color="#0061FF" />
+        <LoadingOverlay />
       </View>
     );
-  }
-
   if (error || !listing) {
     return (
-      <View className="flex-1 items-center justify-center gap-4 bg-accent-100 px-8">
+      <View className="flex-1 bg-accent-100">
         <BackButton onGoBack={goBack} insets={insets} />
-        <Text className="text-center font-rubik text-base text-danger">
-          {errorMessage(error, "Could not load this listing.")}
-        </Text>
-        <Button
-          label="Try again"
-          onPress={() => refetch()}
-          className="rounded-full bg-primary-300 px-6 py-3"
-          textClassName="font-rubik-medium text-white"
+        <ErrorState
+          message={errorMessage(error, "Could not load this listing.")}
+          onRetry={() => refetch()}
         />
       </View>
     );
@@ -94,7 +89,7 @@ const Property = () => {
 
   const handleCta = () => {
     if (status !== "authenticated") return router.push("/auth-screen");
-    // next step: open the offer flow (POST /v1/transactions, then payment)
+    router.push(`/offer/${listing.id}`);
   };
 
   return (

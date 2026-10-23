@@ -5,25 +5,41 @@ import { useEffect } from "react";
 const VERIFY = "/verify-otp";
 const LOGIN = "/auth-screen";
 const TAB_PATHS = ["/home", "/explore", "/favorites", "/profile"];
+const PROTECTED_PATHS = [
+  "/home",
+  "/explore",
+  "/favorites",
+  "/profile",
+  "/edit-profile",
+  "/become-seller",
+  "/offer",
+  "/payment",
+];
 
 export const AuthGate = () => {
   const router = useRouter();
   const pathname = usePathname();
   const status = useAuthStore((s) => s.status);
-
   useEffect(() => {
     if (status === "loading") return;
     const onTabs = TAB_PATHS.some(
       (p) => pathname === p || pathname.startsWith(`${p}/`),
     );
+    const onProtected = PROTECTED_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(`${p}/`),
+    );
+
     if (status === "pending") {
       if (pathname !== VERIFY) router.replace(VERIFY);
     } else if (status === "authenticated") {
       if (pathname === "/" || pathname === LOGIN || pathname === VERIFY)
         router.replace("/home");
     } else if (status === "unauthenticated") {
-      if (onTabs) router.replace("/");
-      else if (pathname === VERIFY) router.replace(LOGIN);
+      if (status === "unauthenticated") {
+        if (onTabs || onProtected || pathname === VERIFY) {
+          router.replace(LOGIN);
+        }
+      }
     }
   }, [status, pathname, router]);
 

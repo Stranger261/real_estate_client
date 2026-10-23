@@ -8,6 +8,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { AuthGate } from "@/components/AuthGate";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import Constants from "expo-constants";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -20,6 +22,9 @@ export default function RootLayout() {
   });
   const authStatus = useAuthStore((s) => s.status);
   const ready = fontsLoaded && authStatus !== "loading";
+
+  const scheme = Constants.expoConfig?.scheme;
+  const urlScheme = Array.isArray(scheme) ? scheme[0] : scheme;
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -39,16 +44,21 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <KeyboardProvider>
-        <StatusBar hidden={true} />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-        <AuthGate />
-      </KeyboardProvider>
-    </QueryClientProvider>
+    <StripeProvider
+      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+      urlScheme={urlScheme}
+    >
+      <QueryClientProvider client={queryClient}>
+        <KeyboardProvider>
+          <StatusBar hidden={true} />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          />
+          <AuthGate />
+        </KeyboardProvider>
+      </QueryClientProvider>
+    </StripeProvider>
   );
 }
