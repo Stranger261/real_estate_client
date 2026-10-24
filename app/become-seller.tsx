@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { Button } from "@/components/Button";
-import ScreenHeader from "@/components/ScreenHeader";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { useApplySeller } from "@/hooks/useAccount";
 import { useMe } from "@/hooks/useMe";
 import { errorMessage } from "@/lib/errors";

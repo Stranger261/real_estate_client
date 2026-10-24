@@ -14,6 +14,9 @@ const PROTECTED_PATHS = [
   "/become-seller",
   "/offer",
   "/payment",
+  "/offers",
+  "/property",
+  "/my-properties",
 ];
 
 export const AuthGate = () => {

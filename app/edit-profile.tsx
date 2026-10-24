@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { Button } from "@/components/Button";
-import ScreenHeader from "@/components/ScreenHeader";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { TextField } from "@/components/TextField";
 import { useUpdateProfile } from "@/hooks/useAccount";
 import { useMe } from "@/hooks/useMe";

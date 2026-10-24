@@ -52,7 +52,6 @@ const PaymentResult = () => {
   const t = query.data;
   const confirmed = t?.status === "CONFIRMED" || t?.status === "COMPLETED";
 
-  // The listing just became rented or sold, so cached listings and favorites are out of date
   useEffect(() => {
     if (!confirmed) return;
     queryClient.invalidateQueries({
@@ -117,7 +116,7 @@ const PaymentResult = () => {
               label="Down payment paid"
               value={formatMoney(t.downPaymentAmount)}
             />
-            <Row label="Total" value={formatMoney(t.totalPrice)} />
+            <Row label="Total" value={formatMoney(t.priceAtTransaction)} />
             {t.leaseStartDate && t.leaseEndDate && (
               <Row
                 label="Lease"

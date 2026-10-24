@@ -16,7 +16,7 @@ export const useCheckout = () => {
     const { data } = await createOffer.mutateAsync({ body });
 
     const init = await initPaymentSheet({
-      merchantDisplayName: "RealEstate",
+      merchantDisplayName: "HUBahay",
       paymentIntentClientSecret: data.clientSecret,
       returnURL: Linking.createURL("stripe-redirect"),
     });

@@ -57,6 +57,12 @@
       [
         "@stripe/stripe-react-native",
         { "merchantIdentifier": "merchant.com.hubahay.app" }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photoPermission": "Allow HUBahay to access your photos so you can add pictures of your property."
+        }
       ]
     ],
     "experiments": {

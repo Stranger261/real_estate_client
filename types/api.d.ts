@@ -1554,6 +1554,479 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/transactions/mine/buying": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Offers I made */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                offers: components["schemas"]["OfferItem"][];
+                            };
+                        };
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/transactions/mine/selling": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Offers I received */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                offers: components["schemas"]["OfferItem"][];
+                                summary: components["schemas"]["SellerSummary"];
+                            };
+                        };
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/transactions/{transactionId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel a confirmed offer and refund the down payment */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    transactionId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        reason?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: Record<string, never>;
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/transactions/{transactionId}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark a confirmed offer as completed */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    transactionId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: Record<string, never>;
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/properties/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Properties I own or manage */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                properties: components["schemas"]["MyProperty"][];
+                            };
+                        };
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/properties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a standalone property */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        type: "HOUSE";
+                        name?: string;
+                        description?: string;
+                        bedrooms: number;
+                        bathrooms: number;
+                        parkingSpaces?: number;
+                        floorArea: number;
+                        lotArea?: number;
+                        yearBuilt?: number;
+                        address: {
+                            street?: string;
+                            barangay?: string;
+                            city?: string;
+                            province?: string;
+                            postalCode?: string;
+                            latitude?: number;
+                            longitude?: number;
+                        };
+                    } | {
+                        /** @enum {string} */
+                        type: "TOWNHOUSE";
+                        name?: string;
+                        description?: string;
+                        bedrooms: number;
+                        bathrooms: number;
+                        floorArea: number;
+                        yearBuilt?: number;
+                        address: {
+                            street?: string;
+                            barangay?: string;
+                            city?: string;
+                            province?: string;
+                            postalCode?: string;
+                            latitude?: number;
+                            longitude?: number;
+                        };
+                    } | {
+                        /** @enum {string} */
+                        type: "COMMERCIAL";
+                        name?: string;
+                        description?: string;
+                        floorArea: number;
+                        parkingSpaces?: number;
+                        yearBuilt?: number;
+                        address: {
+                            street?: string;
+                            barangay?: string;
+                            city?: string;
+                            province?: string;
+                            postalCode?: string;
+                            latitude?: number;
+                            longitude?: number;
+                        };
+                    } | {
+                        /** @enum {string} */
+                        type: "LAND";
+                        name?: string;
+                        description?: string;
+                        lotArea: number;
+                        address: {
+                            street?: string;
+                            barangay?: string;
+                            city?: string;
+                            province?: string;
+                            postalCode?: string;
+                            latitude?: number;
+                            longitude?: number;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                property: {
+                                    id: string;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1769,7 +2242,7 @@ export interface components {
             paymentStatus: "UNPAID" | "PAID" | "REFUNDED" | "FAILED";
             /** @enum {string} */
             transactionType: "SALE" | "RENT";
-            totalPrice: number;
+            priceAtTransaction: number;
             downPaymentAmount: number;
             leaseStartDate: string | null;
             leaseEndDate: string | null;
@@ -1784,11 +2257,57 @@ export interface components {
             listingType: "SALE" | "RENT";
             monthlyRate: number | null;
             months: number | null;
-            totalPrice: number;
+            priceAtTransaction: number;
             downPayment: number;
             balance: number;
             downPaymentPercent: number;
             currency: string;
+        };
+        OfferItem: {
+            id: string;
+            /** @enum {string} */
+            status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "REJECTED";
+            /** @enum {string} */
+            paymentStatus: "UNPAID" | "PAID" | "REFUNDED" | "FAILED";
+            /** @enum {string} */
+            transactionType: "SALE" | "RENT";
+            priceAtTransaction: number;
+            downPaymentAmount: number;
+            leaseStartDate: string | null;
+            leaseEndDate: string | null;
+            createdAt: string;
+            listing: components["schemas"]["ListingSummary"];
+            counterpart: {
+                name: string;
+            };
+        };
+        SellerSummary: {
+            downPaymentsReceived: number;
+            totalDealValue: number;
+            confirmedCount: number;
+            completedCount: number;
+        };
+        MyProperty: {
+            id: string;
+            name: string | null;
+            /** @enum {string} */
+            type: "HOUSE" | "TOWNHOUSE" | "LAND" | "COMMERCIAL";
+            /** @enum {string} */
+            status: "ACTIVE" | "SUSPENDED";
+            /** @enum {string} */
+            occupancyStatus: "AVAILABLE" | "OCCUPIED" | "UNDER_CONSTRUCTION" | "SOLD" | "RENTED";
+            /** @enum {string} */
+            verificationStatus: "PENDING" | "VERIFIED" | "REJECTED";
+            verificationRejectReason: string | null;
+            documentsSubmitted: boolean;
+            thumbnailUrl: string | null;
+            createdAt: string;
+            address: {
+                street: string | null;
+                barangay: string | null;
+                city: string | null;
+                province: string | null;
+            } | null;
         };
     };
     responses: never;

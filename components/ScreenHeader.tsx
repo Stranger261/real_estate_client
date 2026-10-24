@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { IconButton } from "./IconButton";
 import { Ionicons } from "@expo/vector-icons";
 
-const ScreenHeader = ({ title }: { title: string }) => {
+export const ScreenHeader = ({ title }: { title: string }) => {
   const router = useRouter();
   return (
     <View className="flex-row items-center gap-3 px-5 py-3">
@@ -19,5 +19,3 @@ const ScreenHeader = ({ title }: { title: string }) => {
     </View>
   );
 };
-
-export default ScreenHeader;

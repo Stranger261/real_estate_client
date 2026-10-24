@@ -43,6 +43,8 @@ export default function Profile() {
     );
   }
 
+  const isSeller = getSellerState(me).kind === "approved";
+
   const name =
     [me.profile?.firstname, me.profile?.lastname].filter(Boolean).join(" ") ||
     me.email.split("@")[0];
@@ -89,6 +91,18 @@ export default function Profile() {
               label="Edit profile"
               onPress={() => router.push("/edit-profile")}
             />
+            <SettingsRow
+              icon="receipt-outline"
+              label={isSeller ? "Offers & earnings" : "My offers"}
+              onPress={() => router.push("/offers")}
+            />
+            {isSeller && (
+              <SettingsRow
+                icon="home-outline"
+                label="My properties"
+                onPress={() => router.push("/my-properties")}
+              />
+            )}
           </View>
         </View>
 
