@@ -34,7 +34,7 @@ const authClient = createClient<paths>({
 });
 let refreshInFlight: Promise<boolean> | null = null;
 
-const refreshAccessToken = (): Promise<boolean> => {
+export const refreshAccessToken = (): Promise<boolean> => {
   if (refreshInFlight) return refreshInFlight;
 
   refreshInFlight = (async () => {
@@ -55,6 +55,11 @@ const refreshAccessToken = (): Promise<boolean> => {
   });
 
   return refreshInFlight;
+};
+
+export const expireSession = async () => {
+  await tokenStorage.clear();
+  onAuthFailure?.();
 };
 
 const fetchWithRefresh: typeof fetch = async (input, init) => {
@@ -79,8 +84,7 @@ const fetchWithRefresh: typeof fetch = async (input, init) => {
   }
 
   if (!(await refreshAccessToken())) {
-    await tokenStorage.clear();
-    onAuthFailure?.();
+    await expireSession();
     return response;
   }
 

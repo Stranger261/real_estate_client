@@ -1,45 +1,50 @@
 import { $api } from "@/lib/query";
+import { useIsScreenFocused } from "./useIsScreenFocused";
 import { useQueryClient } from "@tanstack/react-query";
+import { invalidateAreas } from "@/lib/invalidate";
 
-export const useMyOffers = () =>
-  $api.useQuery(
+const POLL_MS = 20_000;
+
+export const useMyOffers = () => {
+  const focused = useIsScreenFocused();
+  return $api.useQuery(
     "get",
     "/v1/transactions/mine/buying",
     {},
-    { select: (res) => res.data.offers },
+    {
+      select: (res) => res.data.offers,
+      refetchInterval: focused ? POLL_MS : false,
+    },
   );
+};
 
-export const useReceivedOffers = (enabled: boolean) =>
-  $api.useQuery(
+export const useReceivedOffers = (enabled: boolean) => {
+  const focused = useIsScreenFocused();
+  return $api.useQuery(
     "get",
     "/v1/transactions/mine/selling",
     {},
-    { enabled, select: (res) => res.data },
+    {
+      enabled,
+      select: (res) => res.data,
+      refetchInterval: focused ? POLL_MS : false,
+    },
   );
+};
 
 export const useOfferActions = () => {
   const queryClient = useQueryClient();
 
+  // A cancel reopens a listing and a deal changes favorites too. Returning the promise keeps
+  // the mutation pending until the lists have refetched.
   const refresh = () =>
-    queryClient.invalidateQueries({
-      predicate: (q) => {
-        const path = q.queryKey[1];
-
-        return (
-          path === "string" &&
-          (path.startsWith("/v1/transactions") ||
-            path.startsWith("/v1/listings") ||
-            path.startsWith("/v1/favorites"))
-        );
-      },
-    });
+    invalidateAreas(queryClient, "transactions", "listings", "favorites");
 
   const cancel = $api.useMutation(
     "post",
     "/v1/transactions/{transactionId}/cancel",
     { onSuccess: refresh },
   );
-
   const complete = $api.useMutation(
     "post",
     "/v1/transactions/{transactionId}/complete",

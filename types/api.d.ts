@@ -158,7 +158,209 @@ export interface paths {
             };
         };
         put?: never;
-        post?: never;
+        /** Create a listing (as a draft) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        title: string;
+                        description?: string;
+                        /** @enum {string} */
+                        listingType: "SALE" | "RENT";
+                        price: number;
+                        target: {
+                            /** @enum {string} */
+                            mode: "existing_property";
+                            /** Format: uuid */
+                            propertyId: string;
+                        } | {
+                            /** @enum {string} */
+                            mode: "existing_building";
+                            /** Format: uuid */
+                            buildingId: string;
+                        } | {
+                            /** @enum {string} */
+                            mode: "existing_unit";
+                            /** Format: uuid */
+                            unitId: string;
+                        } | {
+                            /** @enum {string} */
+                            mode: "existing_room";
+                            /** Format: uuid */
+                            roomId: string;
+                        } | {
+                            /** @enum {string} */
+                            mode: "new_property";
+                            property: {
+                                /** @enum {string} */
+                                type: "HOUSE";
+                                name?: string;
+                                description?: string;
+                                bedrooms: number;
+                                bathrooms: number;
+                                parkingSpaces?: number;
+                                floorArea: number;
+                                lotArea?: number;
+                                yearBuilt?: number;
+                                address: {
+                                    street?: string;
+                                    barangay?: string;
+                                    city?: string;
+                                    province?: string;
+                                    postalCode?: string;
+                                    latitude?: number;
+                                    longitude?: number;
+                                };
+                            } | {
+                                /** @enum {string} */
+                                type: "TOWNHOUSE";
+                                name?: string;
+                                description?: string;
+                                bedrooms: number;
+                                bathrooms: number;
+                                floorArea: number;
+                                yearBuilt?: number;
+                                address: {
+                                    street?: string;
+                                    barangay?: string;
+                                    city?: string;
+                                    province?: string;
+                                    postalCode?: string;
+                                    latitude?: number;
+                                    longitude?: number;
+                                };
+                            } | {
+                                /** @enum {string} */
+                                type: "COMMERCIAL";
+                                name?: string;
+                                description?: string;
+                                floorArea: number;
+                                parkingSpaces?: number;
+                                yearBuilt?: number;
+                                address: {
+                                    street?: string;
+                                    barangay?: string;
+                                    city?: string;
+                                    province?: string;
+                                    postalCode?: string;
+                                    latitude?: number;
+                                    longitude?: number;
+                                };
+                            } | {
+                                /** @enum {string} */
+                                type: "LAND";
+                                name?: string;
+                                description?: string;
+                                lotArea: number;
+                                address: {
+                                    street?: string;
+                                    barangay?: string;
+                                    city?: string;
+                                    province?: string;
+                                    postalCode?: string;
+                                    latitude?: number;
+                                    longitude?: number;
+                                };
+                            };
+                        } | {
+                            /** @enum {string} */
+                            mode: "new_unit";
+                            unit: {
+                                /** Format: uuid */
+                                buildingId: string;
+                                /** @enum {string} */
+                                type: "CONDO" | "APARTMENT" | "OFFICE" | "COMMERCIAL_SPACE" | "ROOM_FOR_RENT";
+                                unitNumber?: string;
+                                floorNumber?: number;
+                                floorArea?: number;
+                                bedrooms?: number;
+                                bathrooms?: number;
+                            };
+                        } | {
+                            /** @enum {string} */
+                            mode: "new_room";
+                            room: {
+                                /** Format: uuid */
+                                unitId: string;
+                                name: string;
+                                floorArea?: number;
+                            };
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                listing: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    status: "DRAFT" | "PUBLISHED" | "SOLD" | "RENTED" | "ARCHIVED";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1093,7 +1295,82 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** Edit a listing */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    listingId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        title?: string;
+                        description?: string;
+                        price?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                listing: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    status: "DRAFT" | "PUBLISHED" | "SOLD" | "RENTED" | "ARCHIVED";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/v1/favorites/{listingId}": {
@@ -1196,6 +1473,146 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/listings/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listings I own */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                listings: components["schemas"]["MyListing"][];
+                            };
+                        };
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/listings/{listingId}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Publish or unpublish */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    listingId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "DRAFT" | "PUBLISHED";
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                listing: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    status: "DRAFT" | "PUBLISHED" | "SOLD" | "RENTED" | "ARCHIVED";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/v1/favorites": {
@@ -2234,6 +2651,13 @@ export interface components {
             favoriteCount: number;
             isFavoritedByViewer: boolean;
         };
+        MyListing: components["schemas"]["ListingSummary"] & {
+            description: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "PUBLISHED" | "SOLD" | "RENTED" | "ARCHIVED";
+            publishedAt: string | null;
+            createdAt: string;
+        };
         TransactionView: {
             id: string;
             /** @enum {string} */
@@ -2308,6 +2732,7 @@ export interface components {
                 city: string | null;
                 province: string | null;
             } | null;
+            hasLiveListing: boolean;
         };
     };
     responses: never;

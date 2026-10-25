@@ -1,4 +1,5 @@
-import { ListingDetail, ListingSummary } from "@/types/listing";
+import { ListingDetail, ListingSummary, MyListing } from "@/types/listing";
+import { BadgeTone } from "./offer";
 
 export const getThumbnail = (l: ListingSummary): string | null =>
   l.property?.media?.[0]?.url ??
@@ -101,4 +102,21 @@ export const getFacts = (
 export const getOwnerName = (l: ListingDetail) => {
   const p = l.owner.profile;
   return [p?.firstname, p?.lastname].filter(Boolean).join(" ") || "the seller";
+};
+
+export const listingStatusBadge = (
+  status: MyListing["status"],
+): { label: string; tone: BadgeTone } => {
+  switch (status) {
+    case "PUBLISHED":
+      return { label: "Live", tone: "success" };
+    case "DRAFT":
+      return { label: "Draft", tone: "neutral" };
+    case "SOLD":
+      return { label: "Sold", tone: "primary" };
+    case "RENTED":
+      return { label: "Rented", tone: "primary" };
+    case "ARCHIVED":
+      return { label: "Archived", tone: "neutral" };
+  }
 };

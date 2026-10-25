@@ -206,6 +206,9 @@ export const propertyBadges = (
 
   if (p.occupancyStatus !== "AVAILABLE")
     badges.push({ label: humanize(p.occupancyStatus), tone: "neutral" });
+
+  if (p.hasLiveListing) badges.push({ label: "Listed", tone: "primary" });
+
   return badges;
 };
 
@@ -224,3 +227,14 @@ export const propertyHint = (p: MyProperty): string | null => {
   }
   return null;
 };
+
+export const needsDocuments = (p: MyProperty) =>
+  p.status === "ACTIVE" &&
+  (p.verificationStatus === "REJECTED" ||
+    (p.verificationStatus === "PENDING" && !p.documentsSubmitted));
+
+export const isListable = (p: MyProperty) =>
+  p.status === "ACTIVE" &&
+  p.verificationStatus === "VERIFIED" &&
+  p.occupancyStatus === "AVAILABLE" &&
+  !p.hasLiveListing;

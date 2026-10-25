@@ -11,6 +11,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { getSellerState } from "@/utils/seller";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { ErrorState } from "@/components/ErrorState";
+import { AvatarPicker } from "@/components/AvatarPicker";
 
 export default function Profile() {
   const router = useRouter();
@@ -60,10 +61,7 @@ export default function Profile() {
 
         <View className="flex-row items-center gap-4">
           {avatarUrl ? (
-            <Image
-              source={{ uri: avatarUrl }}
-              className="h-16 w-16 rounded-full"
-            />
+            <AvatarPicker name={name} url={avatarUrl} />
           ) : (
             <View className="h-16 w-16 items-center justify-center rounded-full bg-primary-200">
               <Text className="font-rubik-bold text-2xl text-primary-300">
@@ -101,6 +99,13 @@ export default function Profile() {
                 icon="home-outline"
                 label="My properties"
                 onPress={() => router.push("/my-properties")}
+              />
+            )}
+            {isSeller && (
+              <SettingsRow
+                icon="pricetag-outline"
+                label="My listings"
+                onPress={() => router.push("/my-listings")}
               />
             )}
           </View>

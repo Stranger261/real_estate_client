@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthState>()((set, get) => {
       if (refreshToken) {
         try {
           await client.POST("/v1/auth/logout", { body: { refreshToken } });
-        } catch (error) {
+        } catch {
           // still log out locally if the network call fails}
         }
         await tokenStorage.clear();

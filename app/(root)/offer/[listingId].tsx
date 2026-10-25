@@ -7,7 +7,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Calendar, type DateData } from "react-native-calendars";
 import { Button } from "@/components/Button";
-import {ScreenHeader} from "@/components/ScreenHeader";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { useListing } from "@/hooks/useListing";
 import { useQuote } from "@/hooks/useQuote";
 import { errorMessage } from "@/lib/errors";

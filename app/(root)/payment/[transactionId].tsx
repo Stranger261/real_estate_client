@@ -11,6 +11,7 @@ import { errorMessage } from "@/lib/errors";
 import { formatDate } from "@/utils/date";
 import { formatMoney } from "@/utils/money";
 import { ErrorState } from "@/components/ErrorState";
+import { invalidateAreas } from "@/lib/invalidate";
 
 const POLL_MS = 2000;
 const GIVE_UP_MS = 30_000;
@@ -53,16 +54,8 @@ const PaymentResult = () => {
   const confirmed = t?.status === "CONFIRMED" || t?.status === "COMPLETED";
 
   useEffect(() => {
-    if (!confirmed) return;
-    queryClient.invalidateQueries({
-      predicate: (q) => {
-        const path = q.queryKey[1];
-        return (
-          typeof path === "string" &&
-          (path.startsWith("/v1/listings") || path.startsWith("/v1/favorites"))
-        );
-      },
-    });
+    if (confirmed)
+      invalidateAreas(queryClient, "transactions", "listings", "favorites");
   }, [confirmed, queryClient]);
 
   if (query.isLoading)

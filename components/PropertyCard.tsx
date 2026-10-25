@@ -4,12 +4,25 @@ import { Badge } from "@/components/Badge";
 import type { MyProperty } from "@/types/property";
 import {
   addressLine,
+  isListable,
+  needsDocuments,
   propertyBadges,
   propertyHint,
   propertyTitle,
 } from "@/utils/property";
+import { Button } from "./Button";
 
-export const PropertyCard = ({ property }: { property: MyProperty }) => {
+type PropertyCardProps = {
+  property: MyProperty;
+  onUploadDocuments?: () => void;
+  onCreateListing?: () => void;
+};
+
+export const PropertyCard = ({
+  property,
+  onUploadDocuments,
+  onCreateListing,
+}: PropertyCardProps) => {
   const address = addressLine(property);
   const hint = propertyHint(property);
 
@@ -55,6 +68,28 @@ export const PropertyCard = ({ property }: { property: MyProperty }) => {
         <Text className="font-rubik text-xs leading-5 text-black-200">
           {hint}
         </Text>
+      )}
+
+      {onUploadDocuments && needsDocuments(property) && (
+        <Button
+          label={
+            property.verificationStatus === "REJECTED"
+              ? "Upload new documents"
+              : "Upload documents"
+          }
+          onPress={onUploadDocuments}
+          className="rounded-full bg-primary-300 py-3"
+          textClassName="font-rubik-semibold text-sm text-white"
+        />
+      )}
+
+      {onCreateListing && isListable(property) && (
+        <Button
+          label="Create listing"
+          onPress={onCreateListing}
+          className="rounded-full bg-primary-300 py-3"
+          textClassName="font-rubik-semibold text-sm text-white"
+        />
       )}
     </View>
   );

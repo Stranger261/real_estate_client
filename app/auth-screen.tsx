@@ -59,18 +59,6 @@ const SignIn = () => {
           <View className="py-4">
             <AuthForm form={form} />
           </View>
-          {/* line */}
-          <LineSeparator middleText="OR" />
-          <View className="mt-2">
-            <Button
-              onPress={form.googleLogin}
-              label="Sign in with google"
-              icon={<Image source={icons.google} className="w-5 h-5" />}
-              className="bg-primary-100 shadow-md shadow-blue-300 rounded-full py-3"
-              textClassName="text-lg font-rubik-medium"
-              loading={auth.isGoogleLoading}
-            />
-          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>

@@ -11,7 +11,7 @@ import { AsyncState } from "@/components/StateViews";
 import { useMyProperties } from "@/hooks/useProperties";
 import { EmptyState } from "@/components/EmptyState";
 
-export default function MyProperties() {
+const MyProperties = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const query = useMyProperties();
@@ -25,7 +25,23 @@ export default function MyProperties() {
         <FlatList
           data={properties}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <PropertyCard property={item} />}
+          renderItem={({ item }) => (
+            <PropertyCard
+              property={item}
+              onUploadDocuments={() =>
+                router.push({
+                  pathname: "/property/[propertyId]/documents",
+                  params: { propertyId: item.id },
+                })
+              }
+              onCreateListing={() =>
+                router.push({
+                  pathname: "/new-listing",
+                  params: { propertyId: item.id },
+                })
+              }
+            />
+          )}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingBottom: 16,
@@ -56,4 +72,6 @@ export default function MyProperties() {
       </View>
     </SafeAreaView>
   );
-}
+};
+
+export default MyProperties;

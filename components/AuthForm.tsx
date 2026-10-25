@@ -14,6 +14,7 @@ import Animated, {
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { useAuth } from "@/hooks/useAuth";
 import { LoadingOverlay } from "./LoadingOverlay";
+import LineSeparator from "./LineSeparator";
 
 export interface FormProp {
   form: ReturnType<typeof useAuthForm>;
@@ -201,6 +202,19 @@ const AuthForm = ({ form }: FormProp) => {
           textClassName="text-white font-rubik-medium"
         />
       </Animated.View>
+
+      {/* line */}
+      <LineSeparator middleText="OR" />
+      <View className="mt-2">
+        <Button
+          onPress={form.googleLogin}
+          label="Sign in with google"
+          icon={<Image source={icons.google} className="w-5 h-5" />}
+          className="bg-primary-100 shadow-md shadow-blue-300 rounded-full py-3"
+          textClassName="text-lg font-rubik-medium"
+          loading={isGoogleLoading}
+        />
+      </View>
     </View>
   );
 };

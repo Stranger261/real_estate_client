@@ -23,6 +23,8 @@ import { errorMessage } from "@/lib/errors";
 import type { OfferItem, SellerSummary } from "@/types/offer";
 import { formatMoney } from "@/utils/money";
 import { getSellerState } from "@/utils/seller";
+import { useRefetchOnFocus } from "@/hooks/useRefetchOnFocus";
+import { usePullRefresh } from "@/hooks/usePullRefresh";
 
 type Tab = "buying" | "selling";
 
@@ -68,6 +70,12 @@ const OffersScreen = () => {
 
   const active = activeTab === "buying" ? buying : selling;
   const offers = activeTab === "buying" ? buying.data : selling.data?.offers;
+
+  useRefetchOnFocus(() => {
+    buying.refetch();
+    if (isSeller) selling.refetch();
+  });
+  const { refreshing, onRefresh } = usePullRefresh(active.refetch);
 
   const perform = async (action: () => Promise<unknown>) => {
     setBusy(true);
@@ -148,8 +156,8 @@ const OffersScreen = () => {
               paddingBottom: insets.bottom + 24,
               flexGrow: 1,
             }}
-            refreshing={active.isRefetching}
-            onRefresh={() => active.refetch()}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             ListHeaderComponent={
               activeTab === "selling" && selling.data ? (
                 <SummaryCard summary={selling.data.summary} />
