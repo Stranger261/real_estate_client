@@ -1,6 +1,12 @@
 import { QueryClient } from "@tanstack/react-query";
 
-type Area = "transactions" | "listings" | "favorites" | "me" | "properties";
+export type Area =
+  | "transactions"
+  | "listings"
+  | "favorites"
+  | "me"
+  | "properties"
+  | "notifications";
 
 const PREFIX: Record<Area, string> = {
   transactions: "/v1/transactions",
@@ -8,6 +14,7 @@ const PREFIX: Record<Area, string> = {
   favorites: "/v1/favorites",
   me: "/v1/users/me",
   properties: "/v1/properties",
+  notifications: "/v1/notifications",
 };
 
 export const invalidateAreas = (queryClient: QueryClient, ...areas: Area[]) => {

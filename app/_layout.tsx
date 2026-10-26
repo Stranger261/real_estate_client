@@ -10,6 +10,8 @@ import { queryClient } from "@/lib/queryClient";
 import { AuthGate } from "@/components/AuthGate";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import Constants from "expo-constants";
+import { RealTimeBridge } from "@/components/RealTimeBridge";
+import { ToastHost } from "@/components/ToastHost";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -57,6 +59,8 @@ export default function RootLayout() {
             }}
           />
           <AuthGate />
+          <RealTimeBridge />
+          <ToastHost />
         </KeyboardProvider>
       </QueryClientProvider>
     </StripeProvider>

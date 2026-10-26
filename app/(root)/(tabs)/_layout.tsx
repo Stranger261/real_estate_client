@@ -1,4 +1,5 @@
 import { TAB_BAR_GAP, TAB_BAR_HEIGHT } from "@/constants/tabBar";
+import { useUnreadCount } from "@/hooks/useNotifications";
 import { useExploreStore } from "@/stores/exploreStore";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -19,6 +20,7 @@ const tabIcon = (active: IconName, inactive: IconName) => {
 
 const TabsLayout = () => {
   const { bottom } = useSafeAreaInsets();
+  const { data: unread = 0 } = useUnreadCount();
 
   useEffect(() => () => useExploreStore.getState().reset(), []);
 
@@ -79,6 +81,8 @@ const TabsLayout = () => {
         options={{
           title: "Profile",
           tabBarIcon: tabIcon("person", "person-outline"),
+          tabBarBadge: unread > 0 ? Math.min(unread, 99) : undefined,
+          tabBarBadgeStyle: { backgroundColor: "#F75555" },
         }}
       />
     </Tabs>

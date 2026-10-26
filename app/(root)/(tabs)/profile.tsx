@@ -12,12 +12,14 @@ import { getSellerState } from "@/utils/seller";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { ErrorState } from "@/components/ErrorState";
 import { AvatarPicker } from "@/components/AvatarPicker";
+import { useUnreadCount } from "@/hooks/useNotifications";
 
 export default function Profile() {
   const router = useRouter();
   const inset = useTabBarInset();
   const { data: me, isLoading, error, refetch } = useMe();
   const signOut = useAuthStore((s) => s.signOut);
+  const { data: unread = 0 } = useUnreadCount();
 
   // Seller status changes on the server (an admin approves), so re-check whenever this tab is shown
   useFocusEffect(
@@ -88,6 +90,12 @@ export default function Profile() {
               icon="person-outline"
               label="Edit profile"
               onPress={() => router.push("/edit-profile")}
+            />
+            <SettingsRow
+              icon="notifications-outline"
+              label="Notifications"
+              value={unread > 0 ? String(unread) : undefined}
+              onPress={() => router.push("/notifications")}
             />
             <SettingsRow
               icon="receipt-outline"
