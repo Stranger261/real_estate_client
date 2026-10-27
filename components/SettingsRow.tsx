@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 type SettingsRowProps = {
   icon: React.ComponentProps<typeof Ionicons>["name"];
@@ -28,7 +28,9 @@ export const SettingsRow = ({
       {label}
     </Text>
     {!!value && (
-      <Text className="font-rubik text-sm text-black-100">{value}</Text>
+      <View className="bg-red-500 rounded-full h-6 w-6 justify-center items-center">
+        <Text className="font-rubik text-sm text-white">{value}</Text>
+      </View>
     )}
     {onPress && !danger && (
       <Ionicons name="chevron-forward" size={18} color="#8C8E98" />

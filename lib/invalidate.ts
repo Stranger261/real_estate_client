@@ -6,7 +6,8 @@ export type Area =
   | "favorites"
   | "me"
   | "properties"
-  | "notifications";
+  | "notifications"
+  | "media";
 
 const PREFIX: Record<Area, string> = {
   transactions: "/v1/transactions",
@@ -15,6 +16,7 @@ const PREFIX: Record<Area, string> = {
   me: "/v1/users/me",
   properties: "/v1/properties",
   notifications: "/v1/notifications",
+  media: "/v1/media",
 };
 
 export const invalidateAreas = (queryClient: QueryClient, ...areas: Area[]) => {

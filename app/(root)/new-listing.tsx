@@ -15,6 +15,7 @@ import { parsePrice, type ListingFormValues } from "@/utils/listingForm";
 import { EmptyState } from "@/components/EmptyState";
 import { isListable } from "@/utils/property";
 import { PropertyOption } from "@/components/listings/PropertyOption";
+import { Button } from "@/components/Button";
 
 const NewListing = () => {
   const router = useRouter();
@@ -112,6 +113,25 @@ const NewListing = () => {
                 />
               ))}
 
+              {property && property.photoCount === 0 && (
+                <View className="gap-3 rounded-2xl bg-white p-4">
+                  <Text className="font-rubik-medium text-sm text-black-300">
+                    This property has no photos yet. Listings with photos get
+                    far more attention.
+                  </Text>
+                  <Button
+                    label="Add photos"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/photos",
+                        params: { mode: "property", targetId: property.id },
+                      })
+                    }
+                    className="rounded-full border border-primary-300 py-3"
+                    textClassName="font-rubik-semibold text-sm text-primary-300"
+                  />
+                </View>
+              )}
               <ListingForm
                 disabled={!property}
                 error={error}

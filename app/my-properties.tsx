@@ -40,6 +40,12 @@ const MyProperties = () => {
                   params: { propertyId: item.id },
                 })
               }
+              onManagePhotos={() =>
+                router.push({
+                  pathname: "/photos",
+                  params: { mode: "property", targetId: item.id },
+                })
+              }
             />
           )}
           contentContainerStyle={{

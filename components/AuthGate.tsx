@@ -21,6 +21,7 @@ const PROTECTED_PATHS = [
   "/my-listings",
   "/new-listing",
   "/notifications",
+  "/photos",
 ];
 
 export const AuthGate = () => {

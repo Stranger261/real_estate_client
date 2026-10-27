@@ -15,6 +15,7 @@ import { Button } from "./Button";
 type PropertyCardProps = {
   property: MyProperty;
   onUploadDocuments?: () => void;
+  onManagePhotos?: () => void;
   onCreateListing?: () => void;
 };
 
@@ -22,6 +23,7 @@ export const PropertyCard = ({
   property,
   onUploadDocuments,
   onCreateListing,
+  onManagePhotos,
 }: PropertyCardProps) => {
   const address = addressLine(property);
   const hint = propertyHint(property);
@@ -80,6 +82,19 @@ export const PropertyCard = ({
           onPress={onUploadDocuments}
           className="rounded-full bg-primary-300 py-3"
           textClassName="font-rubik-semibold text-sm text-white"
+        />
+      )}
+
+      {onManagePhotos && (
+        <Button
+          label={
+            property.photoCount === 0
+              ? "Add photos"
+              : `Photos (${property.photoCount})`
+          }
+          onPress={onManagePhotos}
+          className="rounded-full border border-primary-300 py-3"
+          textClassName="font-rubik-semibold text-sm text-primary-300"
         />
       )}
 
