@@ -1,42 +1,42 @@
+// app/new-listing.tsx
 import { useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { Button } from "@/components/Button";
 import { ListingForm } from "@/components/ListingForm";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
+import { PickOption } from "@/components/inventory/PickOption";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { AsyncState } from "@/components/StateViews";
+import { useInventory } from "@/hooks/useInventory";
 import { useListingActions } from "@/hooks/useMyListings";
-import { useMyProperties } from "@/hooks/useProperties";
 import { errorMessage } from "@/lib/errors";
+import { humanize } from "@/utils/listing";
+import { listingTarget, KIND_ICON, KIND_MODE } from "@/utils/inventory";
 import { parsePrice, type ListingFormValues } from "@/utils/listingForm";
 import { EmptyState } from "@/components/EmptyState";
-import { isListable } from "@/utils/property";
-import { PropertyOption } from "@/components/listings/PropertyOption";
-import { Button } from "@/components/Button";
 
 const NewListing = () => {
   const router = useRouter();
-  const { propertyId: presetId } = useLocalSearchParams<{
-    propertyId?: string;
-  }>();
-  const query = useMyProperties();
+  const { id: presetId } = useLocalSearchParams<{ id?: string }>();
+  const query = useInventory();
   const actions = useListingActions();
   const [selectedId, setSelectedId] = useState<string | undefined>(presetId);
   const [error, setError] = useState<string | null>(null);
 
-  const listable = (query.data ?? []).filter(isListable);
+  const listable = (query.data ?? []).filter((i) => i.canList);
   const chosenId =
     selectedId ?? (listable.length === 1 ? listable[0].id : undefined);
-  const property = listable.find((p) => p.id === chosenId);
+  const item = listable.find((i) => i.id === chosenId);
 
   const submit = async (
     values: ListingFormValues,
     intent: "primary" | "secondary",
   ) => {
-    if (!property) return;
+    if (!item) return;
     setError(null);
 
     let listingId: string;
@@ -46,7 +46,7 @@ const NewListing = () => {
         description: values.description.trim() || undefined,
         listingType: values.listingType,
         price: parsePrice(values.price),
-        target: { mode: "existing_property", propertyId: property.id },
+        target: listingTarget(item),
       });
       listingId = res.data.listing.id;
     } catch (e) {
@@ -59,7 +59,6 @@ const NewListing = () => {
       try {
         await actions.setStatus(listingId, "PUBLISHED");
       } catch (e) {
-        // the draft exists, so tell the user exactly where things stand
         Alert.alert(
           "Saved as a draft",
           `It couldn't be published yet. ${errorMessage(e, "Try again from My listings.")}`,
@@ -79,16 +78,16 @@ const NewListing = () => {
 
         <AsyncState
           query={query}
-          errorFallback="Could not load your properties."
+          errorFallback="Could not load your inventory."
         >
           {listable.length === 0 ? (
             <EmptyState
               icon="shield-checkmark-outline"
               title="Nothing ready to list yet"
-              message="A property must be verified, available, and not already listed. Upload your ownership documents from My properties."
+              message="Something must be verified, available, and not already listed. Upload ownership documents from My inventory."
               action={{
-                label: "My properties",
-                onPress: () => router.replace("/my-properties"),
+                label: "My inventory",
+                onPress: () => router.replace("/inventory"),
               }}
             />
           ) : (
@@ -102,29 +101,37 @@ const NewListing = () => {
               }}
             >
               <Text className="font-rubik-semibold text-base text-black-300">
-                {listable.length > 1 ? "Which property?" : "Property"}
+                {listable.length > 1 ? "What are you listing?" : "Listing"}
               </Text>
-              {listable.map((p) => (
-                <PropertyOption
-                  key={p.id}
-                  property={p}
-                  selected={p.id === chosenId}
-                  onPress={() => setSelectedId(p.id)}
+              {listable.map((i) => (
+                <PickOption
+                  key={i.id}
+                  title={i.title}
+                  subtitle={[humanize(i.kind), i.subtitle]
+                    .filter(Boolean)
+                    .join(" · ")}
+                  thumbnailUrl={i.thumbnailUrl}
+                  icon={KIND_ICON[i.kind]}
+                  selected={i.id === chosenId}
+                  onPress={() => setSelectedId(i.id)}
                 />
               ))}
 
-              {property && property.photoCount === 0 && (
+              {item && item.photoCount === 0 && (
                 <View className="gap-3 rounded-2xl bg-white p-4">
                   <Text className="font-rubik-medium text-sm text-black-300">
-                    This property has no photos yet. Listings with photos get
-                    far more attention.
+                    This has no photos yet. Listings with photos get far more
+                    attention.
                   </Text>
                   <Button
                     label="Add photos"
                     onPress={() =>
                       router.push({
                         pathname: "/photos",
-                        params: { mode: "property", targetId: property.id },
+                        params: {
+                          mode: KIND_MODE[item.kind],
+                          targetId: item.id,
+                        },
                       })
                     }
                     className="rounded-full border border-primary-300 py-3"
@@ -132,8 +139,9 @@ const NewListing = () => {
                   />
                 </View>
               )}
+
               <ListingForm
-                disabled={!property}
+                disabled={!item}
                 error={error}
                 primaryLabel="Publish listing"
                 secondaryLabel="Save as draft"
@@ -148,5 +156,4 @@ const NewListing = () => {
     </View>
   );
 };
-
 export default NewListing;

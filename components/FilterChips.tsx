@@ -1,6 +1,6 @@
 import { ScrollView } from "react-native";
 import { ChipType } from "@/constants/filters";
-import Chip from "../Chip";
+import Chip from "./Chip";
 
 type FilterChipsProps<T extends string> = {
   chips: ChipType<T>[];
@@ -8,7 +8,7 @@ type FilterChipsProps<T extends string> = {
   onChange: (value: T | undefined) => void;
 };
 
-const FilterChips = <T extends string>({
+export const FilterChips = <T extends string>({
   chips,
   value,
   onChange,

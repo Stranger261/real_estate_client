@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
@@ -6,7 +6,7 @@ import SearchBar from "@/components/SearchBar";
 import Feed from "@/components/listings/Feed";
 import { useTabBarInset } from "@/hooks/useTabBarInset";
 import { FILTERS } from "@/constants/filters";
-import FilterChips from "@/components/listings/FilterChips";
+import { FilterChips } from "@/components/FilterChips";
 import { useExploreStore } from "@/stores/exploreStore";
 import { useFocusEffect } from "expo-router";
 

@@ -16,7 +16,7 @@ export const useMyListings = () =>
 export const useListingActions = () => {
   const queryClient = useQueryClient();
 
-  const refresh = () => invalidateAreas(queryClient, "listings", "properties");
+  const refresh = () => invalidateAreas(queryClient, "listings", "inventory");
 
   const create = $api.useMutation("post", "/v1/listings", {
     onSuccess: refresh,

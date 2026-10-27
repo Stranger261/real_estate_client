@@ -1,3 +1,4 @@
+// app/documents.tsx
 import { useState } from "react";
 import { Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
 import {
@@ -11,23 +12,23 @@ import { Button } from "@/components/Button";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { AsyncState } from "@/components/StateViews";
-import { useMyProperties } from "@/hooks/useProperties";
+import { useInventory } from "@/hooks/useInventory";
 import { useUploadDocuments } from "@/hooks/useUploads";
 import { errorMessage } from "@/lib/errors";
 import { pickImages } from "@/lib/pickImages";
 import type { PickedFile } from "@/lib/upload";
+import { isMediaMode } from "@/types/media";
+import { KIND_NOUN, MODE_KIND, type Kind } from "@/utils/inventory";
 import { EmptyState } from "@/components/EmptyState";
 
 const MAX_DOCS = 5;
 
-export default function PropertyDocuments() {
-  const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
+function Uploader({ kind, id }: { kind: Exclude<Kind, "ROOM">; id: string }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  const query = useMyProperties();
-  const property = query.data?.find((p) => p.id === propertyId);
-  const submit = useUploadDocuments(propertyId, "PROPERTY");
+  const query = useInventory();
+  const item = query.data?.find((i) => i.id === id);
+  const submit = useUploadDocuments(id, kind);
   const [files, setFiles] = useState<PickedFile[]>([]);
 
   const add = async () => {
@@ -51,8 +52,9 @@ export default function PropertyDocuments() {
       await submit.mutateAsync(files);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
-    } catch {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    } catch (error) {
+      console.log(error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error); // the message shows via submit.error
     }
   };
 
@@ -61,25 +63,23 @@ export default function PropertyDocuments() {
       <SafeAreaView edges={["top"]} className="flex-1 bg-accent-100">
         <ScreenHeader title="Ownership documents" />
 
-        <AsyncState query={query} errorFallback="Could not load this property.">
-          {!property || property.verificationStatus === "VERIFIED" ? (
+        <AsyncState query={query} errorFallback="Could not load this item.">
+          {!item || item.verificationStatus === "VERIFIED" ? (
             <EmptyState
               icon="shield-checkmark-outline"
-              title={property ? "Already verified" : "Property not found"}
+              title={item ? "Already verified" : "Not found"}
               message={
-                property
-                  ? "This property doesn't need any more documents."
-                  : undefined
+                item ? "This doesn't need any more documents." : undefined
               }
             />
           ) : (
             <>
               <ScrollView contentContainerStyle={{ padding: 20, gap: 16 }}>
-                {property.verificationStatus === "REJECTED" && (
+                {item.verificationStatus === "REJECTED" && (
                   <View className="rounded-xl bg-danger/10 px-4 py-3">
                     <Text className="font-rubik-medium text-sm text-danger">
-                      {property.verificationRejectReason
-                        ? `Rejected: ${property.verificationRejectReason}`
+                      {item.verificationRejectReason
+                        ? `Rejected: ${item.verificationRejectReason}`
                         : "Your last documents were rejected. Please upload new ones."}
                     </Text>
                   </View>
@@ -90,10 +90,10 @@ export default function PropertyDocuments() {
                     What to upload
                   </Text>
                   <Text className="font-rubik text-sm leading-5 text-black-200">
-                    Clear photos of papers that show you own this property, for
-                    example a land title, tax declaration, or deed of sale.
-                    Names and numbers must be readable. Photos only (JPEG, PNG,
-                    or WEBP), up to {MAX_DOCS}.
+                    Clear photos of papers that show you own this{" "}
+                    {KIND_NOUN[kind]}, for example a title, tax declaration, or
+                    deed of sale. Names and numbers must be readable. Photos
+                    only (JPEG, PNG, or WEBP), up to {MAX_DOCS}.
                   </Text>
                 </View>
 
@@ -115,7 +115,6 @@ export default function PropertyDocuments() {
                       </Pressable>
                     </View>
                   ))}
-
                   {files.length < MAX_DOCS && (
                     <Pressable
                       onPress={add}
@@ -125,10 +124,6 @@ export default function PropertyDocuments() {
                     </Pressable>
                   )}
                 </View>
-
-                <Text className="font-rubik text-xs text-black-100">
-                  {files.length} of {MAX_DOCS} photos
-                </Text>
 
                 {submit.error && (
                   <Text className="font-rubik text-sm text-danger">
@@ -163,3 +158,30 @@ export default function PropertyDocuments() {
     </View>
   );
 }
+
+const Documents = () => {
+  const { mode, targetId } = useLocalSearchParams<{
+    mode?: string;
+    targetId?: string;
+  }>();
+  const kind = isMediaMode(mode) ? MODE_KIND[mode] : undefined;
+
+  if (!kind || !targetId || kind === "ROOM") {
+    return (
+      <SafeAreaView className="flex-1 bg-accent-100">
+        <ScreenHeader title="Ownership documents" />
+        <EmptyState
+          icon="shield-checkmark-outline"
+          title={
+            kind === "ROOM"
+              ? "Rooms are verified through their unit"
+              : "Nothing to show"
+          }
+        />
+      </SafeAreaView>
+    );
+  }
+  return <Uploader kind={kind} id={targetId} />;
+};
+
+export default Documents;

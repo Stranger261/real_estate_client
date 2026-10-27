@@ -29,7 +29,7 @@ export const areasFor = (type: Type): Area[] => {
     case "SELLER_APPLICATION":
       return ["me"];
     case "VERIFICATION_RESULT":
-      return ["properties", "listings"];
+      return ["inventory", "listings"];
     default:
       return ["transactions", "listings", "favorites"];
   }

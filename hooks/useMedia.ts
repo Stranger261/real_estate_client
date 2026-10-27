@@ -17,13 +17,7 @@ const useRefreshPhotos = () => {
   const queryClient = useQueryClient();
 
   return () =>
-    invalidateAreas(
-      queryClient,
-      "media",
-      "properties",
-      "listings",
-      "favorites",
-    );
+    invalidateAreas(queryClient, "media", "inventory", "listings", "favorites");
 };
 
 export const useMediaActions = (scope: MediaScope) => {

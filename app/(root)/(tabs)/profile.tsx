@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRouter } from "expo-router";
 import { SellerCard } from "@/components/seller/SellerCard";
@@ -104,9 +104,9 @@ export default function Profile() {
             />
             {isSeller && (
               <SettingsRow
-                icon="home-outline"
-                label="My properties"
-                onPress={() => router.push("/my-properties")}
+                icon="albums-outline"
+                label="My inventory"
+                onPress={() => router.push("/inventory")}
               />
             )}
             {isSeller && (

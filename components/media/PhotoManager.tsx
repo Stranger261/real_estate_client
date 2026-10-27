@@ -37,8 +37,6 @@ export const PhotoManager = ({ scope }: { scope: MediaScope }) => {
   const uploader = useUploadPhotos(scope);
   const [busy, setBusy] = useState(false);
 
-  console.log(query.data);
-
   const run = async (action: () => Promise<unknown>) => {
     setBusy(true);
     try {

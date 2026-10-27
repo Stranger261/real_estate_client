@@ -1,9 +1,6 @@
-import { Button } from "@/components/Button";
 import AuthForm from "@/components/AuthForm";
-import icons from "@/constants/icons";
 import images from "@/constants/images";
 import { useAuthForm } from "@/hooks/useAuthForm";
-import LineSeparator from "@/components/LineSeparator";
 import { Image, Text, View } from "react-native";
 import {
   SafeAreaView,
@@ -11,13 +8,11 @@ import {
 } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { useAuth } from "@/hooks/useAuth";
 import { BackButton } from "@/components/BackButton";
 import { router } from "expo-router";
 
 const SignIn = () => {
   const form = useAuthForm();
-  const auth = useAuth();
   const insets = useSafeAreaInsets();
 
   return (

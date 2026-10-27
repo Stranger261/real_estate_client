@@ -30,7 +30,7 @@ export const useRealTime = () => {
           "transactions",
           "listings",
           "me",
-          "properties",
+          "inventory",
         );
       }
       firstConnect = false;
