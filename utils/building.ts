@@ -6,6 +6,7 @@ import {
   type AddressValues,
 } from "@/utils/address";
 import { optionalNumber, toNumber } from "@/utils/number";
+import { Coords } from "./geo";
 
 export type BuildingKind = CreateBuildingBody["type"];
 export const BUILDING_TYPES: { label: string; value: BuildingKind }[] = [
@@ -47,11 +48,14 @@ export const validateBuildingForm = (f: BuildingForm): BuildingErrors => {
   return errors;
 };
 
-export const buildBuildingBody = (f: BuildingForm): CreateBuildingBody => ({
+export const buildBuildingBody = (
+  f: BuildingForm,
+  coords?: Coords | null,
+): CreateBuildingBody => ({
   name: f.name.trim(),
   type: f.type,
   description: f.description.trim() || undefined,
   floors: optionalNumber(f.floors),
   yearBuilt: optionalNumber(f.yearBuilt),
-  address: toAddressBody(f.address),
+  address: { ...toAddressBody(f.address), ...(coords ?? {}) },
 });

@@ -8,6 +8,8 @@ type Type = NotificationItem["type"];
 const ADMIN_SCREENS: Record<string, Href> = {
   verifications: "/admin/verifications",
   "seller-applications": "/admin/seller-applications",
+  activity: "/admin/activity",
+  profile: "/profile",
 };
 
 export const iconFor = (
@@ -42,7 +44,7 @@ export const areasFor = (type: Type): Area[] => {
     case "LISTING_MODERATION":
       return ["listings", "inventory", "favorites"];
     case "ADMIN_TASK":
-      return ["admin"];
+      return ["admin", "me"];
     default:
       return ["transactions", "listings", "favorites"];
   }

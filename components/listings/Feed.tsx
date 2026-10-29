@@ -8,10 +8,12 @@ const Feed = ({
   search,
   title,
   bottomInset = 40,
+  emptyAction,
 }: {
   search: ListingSearch;
   title?: string;
   bottomInset?: number;
+  emptyAction?: { label: string; onPress: () => void };
 }) => {
   const query = useListings(search);
   const { data: listings, isRefetching, isPlaceholderData, refetch } = query;
@@ -40,15 +42,22 @@ const Feed = ({
         }
         ListEmptyComponent={
           <EmptyState
-            icon="search-outline"
+            icon={search.near ? "navigate-outline" : "search-outline"}
             title={
-              search.q ? `No listings match "${search.q}"` : "No listings yet"
+              search.near
+                ? `Nothing within ${search.near.radiusKm} km`
+                : search.q
+                  ? `No listings match "${search.q}"`
+                  : "No listings yet"
             }
             message={
-              search.q
-                ? "Try a different search or clear the filters."
-                : "Check back soon."
+              search.near
+                ? "Try a wider radius, or turn off Near me to browse everywhere."
+                : search.q
+                  ? "Try a different search or clear the filters."
+                  : "Check back soon."
             }
+            action={emptyAction}
           />
         }
         showsVerticalScrollIndicator={false}

@@ -21,6 +21,8 @@ import {
   type FormErrors,
   type PropertyForm,
 } from "@/utils/property";
+import { Coords } from "@/utils/geo";
+import { LocationButton } from "@/components/location/LocationButton";
 
 const Section = ({ title }: { title: string }) => (
   <Text className="mt-2 font-rubik-semibold text-base text-black-300">
@@ -33,6 +35,7 @@ export default function NewProperty() {
   const create = useCreateProperty();
   const [form, setForm] = useState<PropertyForm>(emptyPropertyForm);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [coords, setCoords] = useState<Coords | null>(null);
 
   const set = (key: keyof PropertyForm) => (value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -49,7 +52,7 @@ export default function NewProperty() {
     }
 
     try {
-      await create.mutateAsync({ body: buildPropertyBody(form) });
+      await create.mutateAsync({ body: buildPropertyBody(form, coords) });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
     } catch {
@@ -147,6 +150,8 @@ export default function NewProperty() {
           onChangeText={set("postalCode")}
           keyboardType="number-pad"
         />
+
+        <LocationButton value={coords} onChange={setCoords} />
 
         {create.error && (
           <Text className="font-rubik text-sm text-danger">

@@ -9,6 +9,9 @@ import { FILTERS } from "@/constants/filters";
 import { FilterChips } from "@/components/FilterChips";
 import { useExploreStore } from "@/stores/exploreStore";
 import { useFocusEffect } from "expo-router";
+import { useLocate } from "@/hooks/useLocate";
+import { RADIUS_STEPS, roundCoords } from "@/utils/geo";
+import { NearMeBar } from "@/components/location/NearMeBar";
 
 export default function Explore() {
   const inset = useTabBarInset();
@@ -18,16 +21,30 @@ export default function Explore() {
   const type = useExploreStore((s) => s.type);
   const item = useExploreStore((s) => s.item);
   const property = useExploreStore((s) => s.property);
-  const { setText, setType, setItem, setProperty } = useExploreStore.getState();
+  const near = useExploreStore((s) => s.near);
+  const radiusKm = useExploreStore((s) => s.radiusKm);
+  const { setText, setType, setItem, setProperty, setNear, setRadius } =
+    useExploreStore.getState();
+
   const q = useDebouncedValue(text.trim());
+  const { locate, locating } = useLocate();
+
+  const turnOnNear = useCallback(async () => {
+    const coords = await locate();
+    if (coords) useExploreStore.getState().setNear(roundCoords(coords));
+  }, [locate]);
 
   useFocusEffect(
     useCallback(() => {
-      if (!useExploreStore.getState().consumeSearchFocus()) return;
+      const store = useExploreStore.getState();
+      if (store.consumeNearMe()) turnOnNear();
+      if (!store.consumeSearchFocus()) return;
       const id = setTimeout(() => searchRef.current?.focus(), 150);
       return () => clearTimeout(id);
-    }, []),
+    }, [turnOnNear]),
   );
+
+  const widerRadius = RADIUS_STEPS.find((km) => km > radiusKm);
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-accent-100">
@@ -37,6 +54,14 @@ export default function Explore() {
       </View>
 
       <View className="gap-2 py-3">
+        <NearMeBar
+          active={!!near}
+          locating={locating}
+          radiusKm={radiusKm}
+          onToggle={() => (near ? setNear(null) : turnOnNear())}
+          onRadius={setRadius}
+        />
+
         <FilterChips chips={FILTERS.type} value={type} onChange={setType} />
         <FilterChips chips={FILTERS.item} value={item} onChange={setItem} />
         {item === "PROPERTY" && (
@@ -53,7 +78,17 @@ export default function Explore() {
           listingType: type,
           targetType: item,
           propertyType: property,
+          near: near ? { ...near, radiusKm } : undefined,
         }}
+        title={near ? "Nearest first" : undefined}
+        emptyAction={
+          near && widerRadius
+            ? {
+                label: `Search ${widerRadius} km`,
+                onPress: () => setRadius(widerRadius),
+              }
+            : undefined
+        }
         bottomInset={inset}
       />
     </SafeAreaView>

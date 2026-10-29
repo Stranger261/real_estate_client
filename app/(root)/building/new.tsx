@@ -20,6 +20,8 @@ import {
   type BuildingErrors,
   type BuildingForm,
 } from "@/utils/building";
+import { Coords } from "@/utils/geo";
+import { LocationButton } from "@/components/location/LocationButton";
 
 const NewBuilding = () => {
   const router = useRouter();
@@ -34,6 +36,7 @@ const NewBuilding = () => {
     address: emptyAddress,
   });
   const [errors, setErrors] = useState<BuildingErrors>({});
+  const [coords, setCoords] = useState<Coords | null>(null);
 
   const set =
     (key: "name" | "description" | "floors" | "yearBuilt") =>
@@ -61,7 +64,9 @@ const NewBuilding = () => {
     }
 
     try {
-      const res = await create.mutateAsync({ body: buildBuildingBody(form) });
+      const res = await create.mutateAsync({
+        body: buildBuildingBody(form, coords),
+      });
       if (returnTo === "unit") {
         // The unit form is waiting underneath: hand it the new building
         usePickerStore
@@ -136,6 +141,7 @@ const NewBuilding = () => {
           onChange={setAddress}
         />
 
+        <LocationButton value={coords} onChange={setCoords} />
         {create.error && (
           <Text className="font-rubik text-sm text-danger">
             {errorMessage(create.error, "Could not save this building.")}

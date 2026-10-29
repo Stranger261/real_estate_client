@@ -1,6 +1,7 @@
 import { CreatePropertyBody, MyProperty, PropertyKind } from "@/types/property";
 import { humanize } from "./listing";
 import { BadgeTone } from "./offer";
+import { Coords } from "./geo";
 
 export const PROPERTY_TYPES: { label: string; value: PropertyKind }[] = [
   { label: "House", value: "HOUSE" },
@@ -129,7 +130,10 @@ export const validatePropertyForm = (form: PropertyForm): FormErrors => {
 const optionalNumber = (raw: string) =>
   raw.trim() ? toNumber(raw) : undefined;
 
-export const buildPropertyBody = (f: PropertyForm): CreatePropertyBody => {
+export const buildPropertyBody = (
+  f: PropertyForm,
+  coords?: Coords | null,
+): CreatePropertyBody => {
   const common = {
     name: f.name.trim() || undefined,
     description: f.description.trim() || undefined,
@@ -139,6 +143,7 @@ export const buildPropertyBody = (f: PropertyForm): CreatePropertyBody => {
       city: f.city.trim(),
       province: f.province.trim(),
       postalCode: f.postalCode.trim() || undefined,
+      ...(coords ?? {}),
     },
   };
 

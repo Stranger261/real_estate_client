@@ -56,7 +56,9 @@
       "expo-secure-store",
       [
         "@stripe/stripe-react-native",
-        { "merchantIdentifier": "merchant.com.hubahay.app" }
+        {
+          "merchantIdentifier": "merchant.com.hubahay.app"
+        }
       ],
       [
         "expo-image-picker",
@@ -69,7 +71,8 @@
         {
           "locationWhenInUsePermission": "Allow RealEstate to use your location to show listings near you."
         }
-      ]
+      ],
+      "@maplibre/maplibre-react-native"
     ],
     "experiments": {
       "typedRoutes": true,

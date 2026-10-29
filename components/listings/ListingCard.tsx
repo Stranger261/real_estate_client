@@ -2,6 +2,7 @@ import { Image, Pressable, View, Text } from "react-native";
 import { ListingSummary } from "@/types/listing";
 import { formatPrice, getThumbnail } from "@/utils/listing";
 import { useRouter } from "expo-router";
+import { formatDistance } from "@/utils/geo";
 
 export const ListingCard = ({ listing }: { listing: ListingSummary }) => {
   const router = useRouter();
@@ -26,9 +27,16 @@ export const ListingCard = ({ listing }: { listing: ListingSummary }) => {
               {isRent ? "For rent" : "For sale"}
             </Text>
           </View>
-          {listing.city && (
-            <Text className="font-rubik text-xs text-black">
-              {listing.city}
+          {(!!listing.city || listing.distanceKm !== undefined) && (
+            <Text className="font-rubik text-xs text-black-200">
+              {[
+                listing.city,
+                listing.distanceKm !== undefined
+                  ? formatDistance(listing.distanceKm)
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </Text>
           )}
         </View>

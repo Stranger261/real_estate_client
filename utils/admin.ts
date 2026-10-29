@@ -1,8 +1,7 @@
 import type { components } from "@/types/api";
-import type { VerificationItem } from "@/types/admin";
+import type { VerificationItem, AdminListing } from "@/types/admin";
 import type { BadgeTone } from "@/utils/offer";
 import type { Ionicons } from "@expo/vector-icons";
-import type { AdminListing } from "@/types/admin";
 import { humanize, listingStatusBadge } from "@/utils/listing";
 
 type Me = components["schemas"]["Me"];
@@ -18,10 +17,6 @@ export const KIND_LABEL: Record<VerificationItem["kind"], string> = {
   building: "Building",
   unit: "Unit",
 };
-
-// Cloudinary serves a small version when asked, so a queue of ten items doesn't download ten full photos
-export const thumbUrl = (url: string) =>
-  url.replace("/upload/", "/upload/w_300,h_300,c_fill,q_auto/");
 
 export const userStatusBadge = (
   status: components["schemas"]["AdminUser"]["status"],

@@ -47,17 +47,17 @@ export const useVerifications = () =>
     },
   );
 
-export const useAdminUsers = (q: string) =>
+export const useAdminUsers = (
+  q: string,
+  filter: "admins" | "banned" | undefined,
+) =>
   $api.useQuery(
     "get",
     "/v1/admin/users",
     {
-      params: { query: q ? { q } : {} },
+      params: { query: { ...(q ? { q } : {}), ...(filter ? { filter } : {}) } },
     },
-    {
-      select: (res) => res.data.users,
-      placeholderData: keepPreviousData,
-    },
+    { select: (res) => res.data.users, placeholderData: keepPreviousData },
   );
 
 export const useAdminListings = (
@@ -137,6 +137,9 @@ export const useAdminActions = () => {
     "/v1/admin/inventory/{kind}/{id}/status",
     { onSuccess: refresh },
   );
+  const adminRole = $api.useMutation("post", "/v1/admin/users/{userId}/admin", {
+    onSuccess: refresh,
+  });
 
   return {
     reviewApplication: (id: string, decision: "APPROVED" | "REJECTED") =>
@@ -169,6 +172,11 @@ export const useAdminActions = () => {
       inventoryStatus.mutateAsync({
         params: { path: { kind, id } },
         body: { status, reason },
+      }),
+    setAdminRole: (userId: string, isAdmin: boolean) =>
+      adminRole.mutateAsync({
+        params: { path: { userId } },
+        body: { isAdmin },
       }),
   };
 };
