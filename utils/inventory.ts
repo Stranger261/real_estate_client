@@ -103,8 +103,12 @@ export const itemBadges = (
 };
 
 export const itemHint = (i: InventoryItem): string | null => {
-  if (i.status === "SUSPENDED")
-    return `An admin suspended this ${KIND_NOUN[i.kind]}. Please contact support.`;
+  if (i.status === "SUSPENDED") {
+    return i.statusReason
+      ? `Suspended by an admin: ${i.statusReason}`
+      : `An admin suspended this ${KIND_NOUN[i.kind]}. Please contact support.`;
+  }
+
   if (i.verificationStatus === "REJECTED") {
     if (i.verificationRejectReason) {
       return `Rejected: ${i.verificationRejectReason}`;

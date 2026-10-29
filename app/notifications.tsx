@@ -1,4 +1,3 @@
-// app/notifications.tsx
 import { FlatList, Pressable, Text, View } from "react-native";
 import {
   SafeAreaView,
@@ -19,7 +18,7 @@ import { timeAgo } from "@/utils/date";
 import { iconFor, routeFor } from "@/utils/notification";
 import { EmptyState } from "@/components/EmptyState";
 
-function Notifications() {
+const Notifications = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const query = useNotifications();
@@ -97,6 +96,6 @@ function Notifications() {
       </AsyncState>
     </SafeAreaView>
   );
-}
+};
 
 export default Notifications;

@@ -63,6 +63,12 @@
         {
           "photoPermission": "Allow HUBahay to access your photos so you can add pictures of your property."
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow RealEstate to use your location to show listings near you."
+        }
       ]
     ],
     "experiments": {

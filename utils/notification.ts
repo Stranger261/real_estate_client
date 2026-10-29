@@ -5,6 +5,11 @@ import { Href } from "expo-router";
 
 type Type = NotificationItem["type"];
 
+const ADMIN_SCREENS: Record<string, Href> = {
+  verifications: "/admin/verifications",
+  "seller-applications": "/admin/seller-applications",
+};
+
 export const iconFor = (
   type: Type,
 ): React.ComponentProps<typeof Ionicons>["name"] => {
@@ -21,6 +26,10 @@ export const iconFor = (
       return "storefront-outline";
     case "VERIFICATION_RESULT":
       return "shield-checkmark-outline";
+    case "LISTING_MODERATION":
+      return "alert-circle-outline";
+    case "ADMIN_TASK":
+      return "clipboard-outline";
   }
 };
 
@@ -30,6 +39,10 @@ export const areasFor = (type: Type): Area[] => {
       return ["me"];
     case "VERIFICATION_RESULT":
       return ["inventory", "listings"];
+    case "LISTING_MODERATION":
+      return ["listings", "inventory", "favorites"];
+    case "ADMIN_TASK":
+      return ["admin"];
     default:
       return ["transactions", "listings", "favorites"];
   }
@@ -40,7 +53,11 @@ export const routeFor = (n: NotificationItem): Href => {
     case "SELLER_APPLICATION":
       return "/profile";
     case "VERIFICATION_RESULT":
-      return "/my-properties";
+      return "/inventory";
+    case "LISTING_MODERATION":
+      return n.data.screen === "inventory" ? "/inventory" : "/my-listings";
+    case "ADMIN_TASK":
+      return ADMIN_SCREENS[n.data.screen] ?? "/admin";
     default:
       return "/offers";
   }

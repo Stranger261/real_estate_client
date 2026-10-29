@@ -20,7 +20,11 @@ export const MyListingCard = ({
   onUnpublish,
 }: MyListingCardProps) => {
   const thumbnail = getThumbnail(listing);
-  const badge = listingStatusBadge(listing.status);
+  const removedByAdmin =
+    listing.status === "ARCHIVED" && !!listing.removalReason;
+  const badge = removedByAdmin
+    ? { label: "Removed by admin", tone: "danger" as const }
+    : listingStatusBadge(listing.status);
   const isRent = listing.listingType === "RENT";
   const isDraft = listing.status === "DRAFT";
   const isLive = listing.status === "PUBLISHED";
@@ -56,6 +60,12 @@ export const MyListingCard = ({
           <Badge {...badge} />
         </View>
       </Pressable>
+
+      {removedByAdmin && (
+        <Text className="font-rubik text-xs leading-5 text-black-200">
+          Reason: {listing.removalReason}
+        </Text>
+      )}
 
       {(isDraft || isLive) && (
         <View className="flex-row gap-3">

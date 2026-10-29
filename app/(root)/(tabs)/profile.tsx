@@ -13,6 +13,7 @@ import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { ErrorState } from "@/components/ErrorState";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { useUnreadCount } from "@/hooks/useNotifications";
+import { isAdminUser } from "@/utils/admin";
 
 export default function Profile() {
   const router = useRouter();
@@ -114,6 +115,13 @@ export default function Profile() {
                 icon="pricetag-outline"
                 label="My listings"
                 onPress={() => router.push("/my-listings")}
+              />
+            )}
+            {isAdminUser(me) && (
+              <SettingsRow
+                icon="shield-outline"
+                label="Admin"
+                onPress={() => router.push("/admin")}
               />
             )}
           </View>
