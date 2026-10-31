@@ -120,3 +120,11 @@ export const listingStatusBadge = (
       return { label: "Archived", tone: "neutral" };
   }
 };
+
+export const formatCompactPrice = (value: number) => {
+  const trim = (n: number) => n.toFixed(n >= 100 ? 0 : 1).replace(/\.0$/, "");
+  if (value >= 1_000_000_000) return `₱${trim(value / 1_000_000_000)}B`;
+  if (value >= 1_000_000) return `₱${trim(value / 1_000_000)}M`;
+  if (value >= 1_000) return `₱${trim(value / 1_000)}K`;
+  return `₱${Math.round(value)}`;
+};

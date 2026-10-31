@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "real_state_app",
+    "name": "HUBahay",
     "slug": "real_state_app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -30,7 +30,8 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash.png",
-          "resizeMode": "cover",
+          "imageWidth": 220,
+          "resizeMode": "contain",
           "backgroundColor": "#ffffff",
           "dark": {
             "enableFullScreenImage_legacy": true,

@@ -35,3 +35,8 @@ export const formatAddress = (
     province: string | null;
   } | null,
 ) => [a?.street, a?.barangay, a?.city, a?.province].filter(Boolean).join(", ");
+
+export const clearedErrors = (patch: Partial<AddressValues>): AddressErrors =>
+  Object.fromEntries(
+    Object.keys(patch).map((key) => [key, undefined]),
+  ) as AddressErrors;

@@ -4,12 +4,15 @@ import { NearMeBar } from "@/components/location/NearMeBar";
 import SearchBar from "@/components/SearchBar";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useLocate } from "@/hooks/useLocate";
+import { useAuthStore } from "@/stores/authStore";
 import { Coords, DEFAULT_RADIUS, roundCoords } from "@/utils/geo";
+import { Redirect } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
+  const status = useAuthStore((s) => s.status);
   const [text, setText] = useState("");
   const [near, setNear] = useState<Coords | null>(null);
   const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS);
@@ -22,6 +25,9 @@ export default function Home() {
     const coords = await locate();
     if (coords) setNear(roundCoords(coords));
   };
+
+  if (status === "authenticated") return <Redirect href="/home" />;
+  if (status === "pending") return <Redirect href="/verify-otp" />;
 
   return (
     <SafeAreaView className="flex-1 bg-accent-100">

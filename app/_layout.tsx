@@ -2,8 +2,8 @@ import "@/global.css";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
-import { StatusBar } from "react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { StatusBar, View } from "react-native";
 import { useAuthStore } from "@/stores/authStore";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
@@ -12,9 +12,54 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import Constants from "expo-constants";
 import { RealTimeBridge } from "@/components/RealTimeBridge";
 import { ToastHost } from "@/components/ToastHost";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useMe } from "@/hooks/useMe";
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
+const MAX_WAIT_MS = 6000;
+
+const AppShell = ({ fontsReady }: { fontsReady: boolean }) => {
+  const authStatus = useAuthStore((s) => s.status);
+  const me = useMe();
+  const [timedOut, setTimedOut] = useState(false);
+  const [ready, setReady] = useState(false);
+  const splashHidden = useRef(false);
+
+  useEffect(() => {
+    const id = setTimeout(() => setTimedOut(true), MAX_WAIT_MS);
+    return () => clearTimeout(id);
+  }, []);
+
+  const sessionChecked =
+    authStatus !== "loading" &&
+    !(authStatus === "authenticated" && me.isPending);
+
+  useEffect(() => {
+    if (!ready && fontsReady && (sessionChecked || timedOut)) setReady(true);
+  }, [ready, fontsReady, sessionChecked, timedOut]);
+
+  const hideSplash = useCallback(() => {
+    if (splashHidden.current) return;
+    splashHidden.current = true;
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
+
+  if (!ready) return null;
+
+  return (
+    <View style={{ flex: 1 }} onLayout={hideSplash}>
+      <StatusBar hidden />
+      <Stack screenOptions={{ headerShown: false }} />
+      <AuthGate />
+      <RealTimeBridge />
+      <ToastHost />
+    </View>
+  );
+};
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     "Rubik-Bold": require("../assets/fonts/Rubik-Bold.ttf"),
     "Rubik-ExtraBold": require("../assets/fonts/Rubik-ExtraBold.ttf"),
     "Rubik-Light": require("../assets/fonts/Rubik-Light.ttf"),
@@ -22,47 +67,26 @@ export default function RootLayout() {
     "Rubik-Regular": require("../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-SemiBold": require("../assets/fonts/Rubik-SemiBold.ttf"),
   });
-  const authStatus = useAuthStore((s) => s.status);
-  const ready = fontsLoaded && authStatus !== "loading";
-
-  const scheme = Constants.expoConfig?.scheme;
-  const urlScheme = Array.isArray(scheme) ? scheme[0] : scheme;
-
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  useEffect(() => {
-    if (ready) SplashScreen.hideAsync();
-  }, [ready]);
 
   useEffect(() => {
     useAuthStore.getState().bootstrap();
   }, []);
 
-  if (!fontsLoaded) return null;
-  if (!ready) return null;
+  const scheme = Constants.expoConfig?.scheme;
+  const urlScheme = Array.isArray(scheme) ? scheme[0] : scheme;
 
   return (
-    <StripeProvider
-      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
-      urlScheme={urlScheme}
-    >
-      <QueryClientProvider client={queryClient}>
-        <KeyboardProvider>
-          <StatusBar hidden={true} />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          />
-          <AuthGate />
-          <RealTimeBridge />
-          <ToastHost />
-        </KeyboardProvider>
-      </QueryClientProvider>
-    </StripeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <StripeProvider
+        publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+        urlScheme={urlScheme}
+      >
+        <QueryClientProvider client={queryClient}>
+          <KeyboardProvider>
+            <AppShell fontsReady={fontsLoaded || !!fontError} />
+          </KeyboardProvider>
+        </QueryClientProvider>
+      </StripeProvider>
+    </GestureHandlerRootView>
   );
 }

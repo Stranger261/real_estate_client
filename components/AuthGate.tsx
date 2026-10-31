@@ -27,6 +27,7 @@ const PROTECTED_PATHS = [
   "/notifications",
   "/photos",
   "/admin",
+  "/pin-location",
 ];
 
 export const AuthGate = () => {

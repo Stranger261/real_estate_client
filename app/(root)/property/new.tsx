@@ -23,6 +23,8 @@ import {
 } from "@/utils/property";
 import { Coords } from "@/utils/geo";
 import { LocationButton } from "@/components/location/LocationButton";
+import { AddressValues, clearedErrors } from "@/utils/address";
+import { PinAddressFill } from "@/components/map/PinAddressFill";
 
 const Section = ({ title }: { title: string }) => (
   <Text className="mt-2 font-rubik-semibold text-base text-black-300">
@@ -30,12 +32,20 @@ const Section = ({ title }: { title: string }) => (
   </Text>
 );
 
-export default function NewProperty() {
+const NewProperty = () => {
   const router = useRouter();
   const create = useCreateProperty();
   const [form, setForm] = useState<PropertyForm>(emptyPropertyForm);
   const [errors, setErrors] = useState<FormErrors>({});
   const [coords, setCoords] = useState<Coords | null>(null);
+
+  const address: AddressValues = {
+    street: form.street,
+    barangay: form.barangay,
+    city: form.city,
+    province: form.province,
+    postalCode: form.postalCode,
+  };
 
   const set = (key: keyof PropertyForm) => (value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -119,6 +129,16 @@ export default function NewProperty() {
         {required.map((key) => numberField(key, true))}
         {optional.map((key) => numberField(key, false))}
 
+        <LocationButton value={coords} onChange={setCoords} />
+        <PinAddressFill
+          coords={coords}
+          address={address}
+          onFill={(patch) => {
+            setForm((prev) => ({ ...prev, ...patch }));
+            setErrors((prev) => ({ ...prev, ...clearedErrors(patch) }));
+          }}
+        />
+
         <Section title="Address" />
         <TextField
           label="Street (optional)"
@@ -151,8 +171,6 @@ export default function NewProperty() {
           keyboardType="number-pad"
         />
 
-        <LocationButton value={coords} onChange={setCoords} />
-
         {create.error && (
           <Text className="font-rubik text-sm text-danger">
             {errorMessage(create.error, "Could not save this property.")}
@@ -169,4 +187,6 @@ export default function NewProperty() {
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
-}
+};
+
+export default NewProperty;

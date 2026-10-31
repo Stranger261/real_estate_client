@@ -12,7 +12,11 @@ import { TextField } from "@/components/TextField";
 import { useCreateBuilding } from "@/hooks/useInventory";
 import { errorMessage } from "@/lib/errors";
 import { usePickerStore } from "@/stores/pickerStore";
-import { emptyAddress, type AddressValues } from "@/utils/address";
+import {
+  clearedErrors,
+  emptyAddress,
+  type AddressValues,
+} from "@/utils/address";
 import {
   BUILDING_TYPES,
   buildBuildingBody,
@@ -22,6 +26,7 @@ import {
 } from "@/utils/building";
 import { Coords } from "@/utils/geo";
 import { LocationButton } from "@/components/location/LocationButton";
+import { PinAddressFill } from "@/components/map/PinAddressFill";
 
 const NewBuilding = () => {
   const router = useRouter();
@@ -132,6 +137,19 @@ const NewBuilding = () => {
           style={{ height: 96, textAlignVertical: "top", paddingTop: 12 }}
         />
 
+        <LocationButton value={coords} onChange={setCoords} />
+        <PinAddressFill
+          coords={coords}
+          address={form.address}
+          onFill={(patch) => {
+            setForm((prev) => ({
+              ...prev,
+              address: { ...prev.address, ...patch },
+            }));
+            setErrors((prev) => ({ ...prev, ...clearedErrors(patch) }));
+          }}
+        />
+
         <Text className="mt-2 font-rubik-semibold text-base text-black-300">
           Address
         </Text>
@@ -140,8 +158,6 @@ const NewBuilding = () => {
           errors={errors}
           onChange={setAddress}
         />
-
-        <LocationButton value={coords} onChange={setCoords} />
         {create.error && (
           <Text className="font-rubik text-sm text-danger">
             {errorMessage(create.error, "Could not save this building.")}

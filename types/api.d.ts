@@ -1163,6 +1163,68 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/listings/map": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listings inside a map area */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                    listingType?: "SALE" | "RENT";
+                    targetType?: "ROOM" | "UNIT" | "BUILDING" | "PROPERTY";
+                    propertyType?: "HOUSE" | "TOWNHOUSE" | "LAND" | "COMMERCIAL";
+                    minPrice?: number;
+                    maxPrice?: number;
+                    minLat?: number | null;
+                    maxLat?: number | null;
+                    minLng?: number | null;
+                    maxLng?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                pins: components["schemas"]["MapPin"][];
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/listings/{listingId}": {
         parameters: {
             query?: never;
@@ -4202,6 +4264,95 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/geocode/reverse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Best-effort address for a map position */
+        get: {
+            parameters: {
+                query?: {
+                    lat?: number | null;
+                    lng?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                address: components["schemas"]["GeocodedAddress"];
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Too many requests */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Service unavailable */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4297,6 +4448,17 @@ export interface components {
             requiresVerification: true;
             email: string;
             pendingToken?: string;
+        };
+        MapPin: {
+            id: string;
+            title: string;
+            /** @enum {string} */
+            listingType: "SALE" | "RENT";
+            price: number;
+            city: string | null;
+            latitude: number;
+            longitude: number;
+            thumbnailUrl: string | null;
         };
         ListingDetail: {
             id: string;
@@ -4643,6 +4805,13 @@ export interface components {
             isSeller: boolean;
             isAdmin: boolean;
         };
+        GeocodedAddress: {
+            street: string | null;
+            barangay: string | null;
+            city: string | null;
+            province: string | null;
+            postalCode: string | null;
+        } | null;
     };
     responses: never;
     parameters: never;
