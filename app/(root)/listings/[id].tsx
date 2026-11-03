@@ -3,6 +3,7 @@ import { Button } from "@/components/Button";
 import { ErrorState } from "@/components/ErrorState";
 import { IconButton } from "@/components/IconButton";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
+import { StarRating } from "@/components/review/StarRating";
 import { useFavorite } from "@/hooks/useFavorite";
 import { useListing } from "@/hooks/useListing";
 import { useMe } from "@/hooks/useMe";
@@ -23,6 +24,7 @@ import React, { useState } from "react";
 import {
   FlatList,
   Image,
+  Pressable,
   ScrollView,
   Text,
   useWindowDimensions,
@@ -224,14 +226,49 @@ const Property = () => {
             </View>
           )}
           <View className="flex-row items-center justify-between rounded-xl bg-white px-4 py-3">
-            <View>
-              <Text className="font-rubik text-xs text-black-100">
-                Listed by
-              </Text>
-              <Text className="font-rubik-medium text-base text-black-300">
-                {getOwnerName(listing)}
-              </Text>
-            </View>
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/reviews/[userId]",
+                  params: { userId: listing.owner.id },
+                })
+              }
+              className="flex-row items-center justify-between rounded-xl bg-white px-4 py-3"
+            >
+              <View className="gap-0.5">
+                <Text className="font-rubik text-xs text-black-100">
+                  Listed by
+                </Text>
+                <Text className="font-rubik-medium text-base text-black-300">
+                  {getOwnerName(listing)}
+                </Text>
+                {listing.owner.rating.count > 0 ? (
+                  <View className="flex-row items-center gap-1.5">
+                    <StarRating
+                      value={listing.owner.rating.average ?? 0}
+                      size={14}
+                    />
+                    <Text className="font-rubik text-xs text-black-200">
+                      {listing.owner.rating.average?.toFixed(1)} (
+                      {listing.owner.rating.count})
+                    </Text>
+                  </View>
+                ) : (
+                  <Text className="font-rubik text-xs text-black-200">
+                    No reviews yet
+                  </Text>
+                )}
+              </View>
+              <View className="flex-row items-center gap-3">
+                <View className="flex-row items-center gap-1">
+                  <Ionicons name="heart" size={14} color="#F75555" />
+                  <Text className="font-rubik text-sm text-black-200">
+                    {listing.favoriteCount}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color="#8C8E98" />
+              </View>
+            </Pressable>
             <View className="flex-row items-center gap-1">
               <Ionicons name="heart" size={14} color="#F75555" />
               <Text className="font-rubik text-sm text-black-200">

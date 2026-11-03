@@ -149,6 +149,12 @@ const OffersScreen = () => {
                 onComplete={
                   activeTab === "selling" ? confirmComplete : undefined
                 }
+                onRate={(o) =>
+                  router.push({
+                    pathname: "/review/[transactionId]",
+                    params: { transactionId: o.id },
+                  })
+                }
               />
             )}
             contentContainerStyle={{

@@ -1,18 +1,20 @@
 import { Image, Pressable, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
+import { StarRating } from "@/components/review/StarRating";
 import type { OfferItem } from "@/types/offer";
 import { formatDate } from "@/utils/date";
 import { getThumbnail } from "@/utils/listing";
 import { formatMoney } from "@/utils/money";
 import { offerBadge } from "@/utils/offer";
-import { TONE } from "@/utils/tone";
 
 type OfferCardProps = {
   offer: OfferItem;
   role: "buyer" | "seller";
   onCancel: (offer: OfferItem) => void;
   onComplete?: (offer: OfferItem) => void;
+  onRate?: (offer: OfferItem) => void;
 };
 
 export const OfferCard = ({
@@ -20,14 +22,18 @@ export const OfferCard = ({
   role,
   onCancel,
   onComplete,
+  onRate,
 }: OfferCardProps) => {
   const router = useRouter();
   const thumbnail = getThumbnail(offer.listing);
-  const badge = offerBadge(offer);
-  const tone = TONE[badge.tone];
 
   const confirmed = offer.status === "CONFIRMED";
   const canComplete = role === "seller" && confirmed && !!onComplete;
+  const canRate =
+    role === "buyer" &&
+    offer.status === "COMPLETED" &&
+    !offer.myReview &&
+    !!onRate;
 
   return (
     <View className="mb-4 gap-3 rounded-2xl bg-white p-4">
@@ -60,11 +66,7 @@ export const OfferCard = ({
           <Text className="font-rubik text-xs text-black-200">
             {role === "buyer" ? "Seller" : "Buyer"}: {offer.counterpart.name}
           </Text>
-          <View className={`self-start rounded-full px-3 py-1 ${tone.box}`}>
-            <Text className={`font-rubik-medium text-xs ${tone.text}`}>
-              {badge.label}
-            </Text>
-          </View>
+          <Badge {...offerBadge(offer)} />
         </View>
       </Pressable>
 
@@ -80,7 +82,7 @@ export const OfferCard = ({
         <View className="flex-row justify-between">
           <Text className="font-rubik text-sm text-black-200">Total</Text>
           <Text className="font-rubik-medium text-sm text-black-300">
-            {formatMoney(offer.priceAtTransaction)}
+            {formatMoney(offer.totalPrice)}
           </Text>
         </View>
         {offer.transactionType === "RENT" &&
@@ -99,6 +101,22 @@ export const OfferCard = ({
       <Text className="font-rubik text-xs text-black-100">
         Offered on {formatDate(offer.createdAt)}
       </Text>
+
+      {role === "buyer" && offer.myReview && (
+        <View className="flex-row items-center gap-2">
+          <StarRating value={offer.myReview.rating} size={16} />
+          <Text className="font-rubik text-xs text-black-200">Your review</Text>
+        </View>
+      )}
+
+      {canRate && (
+        <Button
+          label="Rate your seller"
+          onPress={() => onRate!(offer)}
+          className="rounded-full bg-primary-300 py-3"
+          textClassName="font-rubik-semibold text-sm text-white"
+        />
+      )}
 
       {confirmed && (
         <View className="flex-row gap-3">

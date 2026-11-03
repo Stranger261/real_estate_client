@@ -32,6 +32,8 @@ export const iconFor = (
       return "alert-circle-outline";
     case "ADMIN_TASK":
       return "clipboard-outline";
+    case "REVIEW_RECEIVED":
+      return "star-outline";
   }
 };
 
@@ -45,6 +47,8 @@ export const areasFor = (type: Type): Area[] => {
       return ["listings", "inventory", "favorites"];
     case "ADMIN_TASK":
       return ["admin", "me"];
+    case "REVIEW_RECEIVED":
+      return ["reviews", "listings"];
     default:
       return ["transactions", "listings", "favorites"];
   }
@@ -60,6 +64,11 @@ export const routeFor = (n: NotificationItem): Href => {
       return n.data.screen === "inventory" ? "/inventory" : "/my-listings";
     case "ADMIN_TASK":
       return ADMIN_SCREENS[n.data.screen] ?? "/admin";
+    case "REVIEW_RECEIVED":
+      return {
+        pathname: "/reviews/[userId]",
+        params: { userId: n.data.userId },
+      };
     default:
       return "/offers";
   }

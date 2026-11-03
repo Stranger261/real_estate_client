@@ -4356,6 +4356,175 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Review the seller of a completed deal */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        transactionId: string;
+                        rating: number;
+                        comment?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                review: {
+                                    id: string;
+                                    rating: number;
+                                    comment: string | null;
+                                    createdAt: string;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not allowed */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/reviews/user/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A seller's rating and reviews */
+        get: {
+            parameters: {
+                query?: {
+                    limit?: number;
+                };
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: {
+                                seller: {
+                                    id: string;
+                                    name: string;
+                                    avatarUrl: string | null;
+                                };
+                                summary: components["schemas"]["ReviewSummary"];
+                                reviews: components["schemas"]["ReviewItem"][];
+                            };
+                        };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4572,6 +4741,10 @@ export interface components {
                     firstname: string | null;
                     lastname: string | null;
                 } | null;
+                rating: {
+                    average: number | null;
+                    count: number;
+                };
             };
             favoriteCount: number;
             isFavoritedByViewer: boolean;
@@ -4628,8 +4801,13 @@ export interface components {
             createdAt: string;
             listing: components["schemas"]["ListingSummary"];
             counterpart: {
+                id: string;
                 name: string;
             };
+            myReview: {
+                rating: number;
+                comment: string | null;
+            } | null;
         };
         SellerSummary: {
             downPaymentsReceived: number;
@@ -4664,7 +4842,7 @@ export interface components {
         NotificationItem: {
             id: string;
             /** @enum {string} */
-            type: "OFFER_RECEIVED" | "OFFER_CANCELLED" | "OFFER_COMPLETED" | "OFFER_REFUNDED" | "SELLER_APPLICATION" | "VERIFICATION_RESULT" | "LISTING_MODERATION" | "ADMIN_TASK";
+            type: "OFFER_RECEIVED" | "OFFER_CANCELLED" | "OFFER_COMPLETED" | "OFFER_REFUNDED" | "SELLER_APPLICATION" | "VERIFICATION_RESULT" | "LISTING_MODERATION" | "ADMIN_TASK" | "REVIEW_RECEIVED";
             title: string;
             body: string;
             data: {
@@ -4816,6 +4994,22 @@ export interface components {
             province: string | null;
             postalCode: string | null;
         } | null;
+        ReviewSummary: {
+            average: number | null;
+            count: number;
+            distribution: number[];
+        };
+        ReviewItem: {
+            id: string;
+            rating: number;
+            comment: string | null;
+            createdAt: string;
+            listingTitle: string;
+            reviewer: {
+                name: string;
+                avatarUrl: string | null;
+            };
+        };
     };
     responses: never;
     parameters: never;

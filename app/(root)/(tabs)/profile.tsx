@@ -117,6 +117,18 @@ export default function Profile() {
                 onPress={() => router.push("/my-listings")}
               />
             )}
+            {isSeller && (
+              <SettingsRow
+                icon="star-outline"
+                label="My reviews"
+                onPress={() =>
+                  router.push({
+                    pathname: "/reviews/[userId]",
+                    params: { userId: me.id },
+                  })
+                }
+              />
+            )}
             {isAdminUser(me) && (
               <SettingsRow
                 icon="shield-outline"
