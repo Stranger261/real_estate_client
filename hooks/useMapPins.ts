@@ -1,10 +1,14 @@
-import { $api } from "@/lib/query";
-import { ListingKind } from "@/constants/filters";
-import { Bounds } from "@/constants/map";
 import { keepPreviousData } from "@tanstack/react-query";
+import type { ListingKind } from "@/constants/filters";
+import type { Bounds } from "@/constants/map";
+import { $api } from "@/lib/query";
+import type { Coords } from "@/utils/geo";
+
+export type MapArea =
+  { bounds: Bounds } | { near: Coords & { radiusKm: number } };
 
 export const useMapPins = (
-  bounds: Bounds | null,
+  area: MapArea,
   listingType: ListingKind | undefined,
 ) =>
   $api.useQuery(
@@ -13,16 +17,23 @@ export const useMapPins = (
     {
       params: {
         query: {
-          minLng: bounds?.[0] ?? 0,
-          minLat: bounds?.[1] ?? 0,
-          maxLng: bounds?.[2] ?? 0,
-          maxLat: bounds?.[3] ?? 0,
+          ...("bounds" in area
+            ? {
+                minLng: area.bounds[0],
+                minLat: area.bounds[1],
+                maxLng: area.bounds[2],
+                maxLat: area.bounds[3],
+              }
+            : {
+                lat: area.near.latitude,
+                lng: area.near.longitude,
+                radiusKm: area.near.radiusKm,
+              }),
           ...(listingType ? { listingType } : {}),
         },
       },
     },
     {
-      enabled: !!bounds,
       select: (res) => res.data,
       placeholderData: keepPreviousData,
     },

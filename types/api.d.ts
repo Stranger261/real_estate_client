@@ -1184,6 +1184,9 @@ export interface paths {
                     maxLat?: number | null;
                     minLng?: number | null;
                     maxLng?: number | null;
+                    lat?: number | null;
+                    lng?: number | null;
+                    radiusKm?: number;
                 };
                 header?: never;
                 path?: never;
@@ -4459,6 +4462,7 @@ export interface components {
             latitude: number;
             longitude: number;
             thumbnailUrl: string | null;
+            distanceKm?: number;
         };
         ListingDetail: {
             id: string;
