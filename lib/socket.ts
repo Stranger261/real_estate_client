@@ -5,9 +5,14 @@ let socket: Socket | null = null;
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io(process.env.EXPO_BASE_URL!, {
+    socket = io(process.env.EXPO_PUBLIC_API_URL!, {
       autoConnect: false,
       transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
       auth: (cb) =>
         tokenStorage
           .get()
