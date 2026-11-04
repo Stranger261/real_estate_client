@@ -1,9 +1,21 @@
-import { NotificationItem } from "@/types/notification";
+// stores/toastStore.ts
+import type { ComponentProps } from "react";
+import type { Ionicons } from "@expo/vector-icons";
+import type { Href } from "expo-router";
 import { create } from "zustand";
 
+export interface Toast {
+  id: string;
+  title: string;
+  body: string;
+  icon: ComponentProps<typeof Ionicons>["name"];
+  href: Href;
+  notificationId?: string;
+}
+
 interface ToastState {
-  toast: NotificationItem | null;
-  show: (n: NotificationItem) => void;
+  toast: Toast | null;
+  show: (toast: Toast) => void;
   hide: () => void;
 }
 

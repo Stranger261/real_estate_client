@@ -4,7 +4,14 @@ import { useEffect } from "react";
 
 const VERIFY = "/verify-otp";
 const LOGIN = "/auth-screen";
-const TAB_PATHS = ["/home", "/explore", "/favorites", "/profile"];
+const TAB_PATHS = [
+  "/home",
+  "/explore",
+  "/favorites",
+  "/profile",
+  "/messages",
+  "/chat",
+];
 const PROTECTED_PATHS = [
   "/home",
   "/explore",
@@ -29,6 +36,8 @@ const PROTECTED_PATHS = [
   "/admin",
   "/pin-location",
   "/review",
+  "/messages",
+  "/chat",
 ];
 
 export const AuthGate = () => {

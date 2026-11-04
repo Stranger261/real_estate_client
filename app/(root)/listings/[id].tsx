@@ -31,6 +31,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useListingConversation } from "@/hooks/useChat";
 
 const HERO_HEIGHT = 300;
 const UNAVAILABLE_TEXT: Record<string, string> = {
@@ -49,6 +50,11 @@ const Property = () => {
   const status = useAuthStore((s) => s.status);
   const favorite = useFavorite(id);
   const [imageIndex, setImageIndex] = useState(0);
+
+  const { data: conversationId } = useListingConversation(
+    id,
+    status === "authenticated" && !!listing && me?.id !== listing.ownerId,
+  );
 
   const goBack = () =>
     router.canGoBack() ? router.back() : router.replace("/");
@@ -80,6 +86,8 @@ const Property = () => {
   const unavailable = listing.status !== "PUBLISHED";
   const isFavorited = listing.isFavoritedByViewer;
 
+  const showMessage = !isOwner && (!unavailable || !!conversationId); // an existing chat stays reachable after a sale
+
   const ctaLabel = isOwner
     ? "This is your listing"
     : unavailable
@@ -87,6 +95,14 @@ const Property = () => {
       : isRent
         ? "Rent this place"
         : "Buy this place";
+
+  const openChat = () => {
+    if (status !== "authenticated") return router.push("/auth-screen");
+    if (conversationId)
+      router.push({ pathname: "/chat/[id]", params: { id: conversationId } });
+    else
+      router.push({ pathname: "/chat/new", params: { listingId: listing.id } });
+  };
 
   const handleCta = () => {
     if (status !== "authenticated") return router.push("/auth-screen");
@@ -280,14 +296,29 @@ const Property = () => {
       </ScrollView>
 
       <View
-        className="border-t border-primary-200 bg-white px-5 pt-3"
+        className="flex-row gap-3 border-t border-primary-200 bg-white px-5 pt-3"
         style={{ paddingBottom: insets.bottom + 12 }}
       >
+        {showMessage && (
+          <Button
+            label={conversationId ? "Open chat" : "Message"}
+            onPress={openChat}
+            icon={
+              <Ionicons
+                name="chatbubble-ellipses-outline"
+                size={18}
+                color="#0061FF"
+              />
+            }
+            className="flex-1 rounded-full border border-primary-300 py-4"
+            textClassName="font-rubik-semibold text-primary-300"
+          />
+        )}
         <Button
           label={ctaLabel}
           onPress={handleCta}
           disabled={isOwner || unavailable}
-          className="rounded-full bg-primary-300 py-4"
+          className="flex-[1.6] rounded-full bg-primary-300 py-4"
           textClassName="font-rubik-semibold text-white"
         />
       </View>

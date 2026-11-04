@@ -1,12 +1,11 @@
+import { useEffect, useRef } from "react";
+import { Animated, Pressable, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useNotificationActions } from "@/hooks/useNotifications";
 import { useToastStore } from "@/stores/toastStore";
-import { useRouter } from "expo-router";
-import { useEffect, useRef } from "react";
-import { Animated, Pressable, View, Text } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import * as Haptics from "expo-haptics";
-import { iconFor, routeFor } from "@/utils/notification";
-import { Ionicons } from "@expo/vector-icons";
 
 const HIDDEN = -200;
 
@@ -34,18 +33,17 @@ export const ToastHost = () => {
         duration: 200,
         useNativeDriver: true,
       }).start(() => {
-        if (useToastStore.getState().toast === toast) hide();
+        if (useToastStore.getState().toast === toast) hide(); // a newer banner may have replaced this one
       });
     }, 4500);
-
     return () => clearTimeout(timer);
   }, [toast, y, hide]);
 
   if (!toast) return null;
 
   const open = () => {
-    markRead(toast.id);
-    router.navigate(routeFor(toast));
+    if (toast.notificationId) markRead(toast.notificationId);
+    router.navigate(toast.href);
     hide();
   };
 
@@ -65,7 +63,7 @@ export const ToastHost = () => {
         onPress={open}
         className="flex-row items-center gap-3 rounded-2xl bg-black-300 px-4 py-3"
       >
-        <Ionicons name={iconFor(toast.type)} size={22} color="#FFFFFF" />
+        <Ionicons name={toast.icon} size={22} color="#FFFFFF" />
         <View className="flex-1">
           <Text
             numberOfLines={1}

@@ -10,7 +10,8 @@ export type Area =
   | "notifications"
   | "media"
   | "admin"
-  | "reviews";
+  | "reviews"
+  | "conversations";
 
 const PREFIX: Record<Area, string> = {
   transactions: "/v1/transactions",
@@ -23,9 +24,9 @@ const PREFIX: Record<Area, string> = {
   media: "/v1/media",
   admin: "/v1/admin",
   reviews: "/v1/reviews",
+  conversations: "/v1/conversations",
 };
 
-// openapi-react-query keys look like [method, path, init], so we match on the path
 export const invalidateAreas = (queryClient: QueryClient, ...areas: Area[]) => {
   const prefixes = areas.map((area) => PREFIX[area]);
   return queryClient.invalidateQueries({

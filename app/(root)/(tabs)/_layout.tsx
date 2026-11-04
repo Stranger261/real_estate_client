@@ -1,10 +1,11 @@
+import { useEffect } from "react";
+import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TAB_BAR_GAP, TAB_BAR_HEIGHT } from "@/constants/tabBar";
+import { useUnreadMessages } from "@/hooks/useChat";
 import { useUnreadCount } from "@/hooks/useNotifications";
 import { useExploreStore } from "@/stores/exploreStore";
-import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
-import { useEffect } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
@@ -18,14 +19,24 @@ const tabIcon = (active: IconName, inactive: IconName) => {
   return TabIcon;
 };
 
-const TabsLayout = () => {
-  const { bottom } = useSafeAreaInsets();
-  const { data: unread = 0 } = useUnreadCount();
+const badge = (count: number) => (count > 0 ? Math.min(count, 99) : undefined);
 
+export default function TabsLayout() {
+  const { bottom } = useSafeAreaInsets();
+  const { data: unreadNotifications = 0 } = useUnreadCount();
+  const { data: unreadMessages = 0 } = useUnreadMessages();
+
+  // When the tabs unmount (logging out), drop the filters so the next user starts clean
   useEffect(() => () => useExploreStore.getState().reset(), []);
 
   return (
     <Tabs
+      screenListeners={({ route }) => ({
+        tabPress: () => {
+          // pressing any tab other than Explore resets Explore's filters
+          if (route.name !== "explore") useExploreStore.getState().reset();
+        },
+      })}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#0061FF",
@@ -33,30 +44,25 @@ const TabsLayout = () => {
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: { fontFamily: "Rubik-Medium", fontSize: 11 },
         tabBarItemStyle: { paddingVertical: 8 },
+        tabBarBadgeStyle: { backgroundColor: "#F75555" },
         tabBarStyle: {
           position: "absolute",
+          left: 20,
+          right: 20,
           bottom: bottom + TAB_BAR_GAP,
           height: TAB_BAR_HEIGHT,
-          paddingVertical: 0,
+          paddingTop: 0,
+          paddingBottom: 0,
           borderRadius: TAB_BAR_HEIGHT / 2,
           borderTopWidth: 0,
           backgroundColor: "#FFFFFF",
-          elevation: 10,
-          marginHorizontal: 24,
-
-          // ios
           shadowColor: "#191d31",
           shadowOpacity: 0.12,
           shadowRadius: 16,
           shadowOffset: { width: 0, height: 6 },
+          elevation: 10,
         },
       }}
-
-      screenListeners={({ route }) => ({
-        tabPress: () => {
-          if (route.name !== "explore") useExploreStore.getState().reset();
-        },
-      })}
     >
       <Tabs.Screen
         name="home"
@@ -72,8 +78,19 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="favorites"
         options={{
-          title: "Favorites",
+          title: "Saved",
           tabBarIcon: tabIcon("heart", "heart-outline"),
+        }}
+      />
+      <Tabs.Screen
+        name="messages"
+        options={{
+          title: "Messages",
+          tabBarIcon: tabIcon(
+            "chatbubble-ellipses",
+            "chatbubble-ellipses-outline",
+          ),
+          tabBarBadge: badge(unreadMessages),
         }}
       />
       <Tabs.Screen
@@ -81,12 +98,9 @@ const TabsLayout = () => {
         options={{
           title: "Profile",
           tabBarIcon: tabIcon("person", "person-outline"),
-          tabBarBadge: unread > 0 ? Math.min(unread, 99) : undefined,
-          tabBarBadgeStyle: { backgroundColor: "#F75555" },
+          tabBarBadge: badge(unreadNotifications),
         }}
       />
     </Tabs>
   );
-};
-
-export default TabsLayout;
+}
