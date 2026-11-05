@@ -7,19 +7,19 @@ import { SettingsRow } from "@/components/SettingsRow";
 import { useMe } from "@/hooks/useMe";
 import { useTabBarInset } from "@/hooks/useTabBarInset";
 import { errorMessage } from "@/lib/errors";
-import { useAuthStore } from "@/stores/authStore";
 import { getSellerState } from "@/utils/seller";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { ErrorState } from "@/components/ErrorState";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { useUnreadCount } from "@/hooks/useNotifications";
 import { isAdminUser } from "@/utils/admin";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Profile() {
+  const auth = useAuth();
   const router = useRouter();
   const inset = useTabBarInset();
   const { data: me, isLoading, error, refetch } = useMe();
-  const signOut = useAuthStore((s) => s.signOut);
   const { data: unread = 0 } = useUnreadCount();
 
   // Seller status changes on the server (an admin approves), so re-check whenever this tab is shown
@@ -32,7 +32,7 @@ export default function Profile() {
   const confirmLogout = () =>
     Alert.alert("Log out?", "You can sign back in anytime.", [
       { text: "Cancel", style: "cancel" },
-      { text: "Log out", style: "destructive", onPress: signOut },
+      { text: "Log out", style: "destructive", onPress: auth.logout },
     ]);
 
   if (isLoading) return <LoadingOverlay fullScreen />;

@@ -44,23 +44,22 @@ export default function TabsLayout() {
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: { fontFamily: "Rubik-Medium", fontSize: 11 },
         tabBarItemStyle: { paddingVertical: 8 },
-        tabBarBadgeStyle: { backgroundColor: "#F75555" },
         tabBarStyle: {
           position: "absolute",
-          left: 20,
-          right: 20,
           bottom: bottom + TAB_BAR_GAP,
           height: TAB_BAR_HEIGHT,
-          paddingTop: 0,
-          paddingBottom: 0,
+          paddingVertical: 0,
           borderRadius: TAB_BAR_HEIGHT / 2,
           borderTopWidth: 0,
           backgroundColor: "#FFFFFF",
+          elevation: 10,
+          marginHorizontal: 24,
+
+          // ios
           shadowColor: "#191d31",
           shadowOpacity: 0.12,
           shadowRadius: 16,
           shadowOffset: { width: 0, height: 6 },
-          elevation: 10,
         },
       }}
     >

@@ -51,7 +51,6 @@ export const useAuth = () => {
       await useAuthStore.getState().signOut();
       await useAuthStore.getState().signOut();
       await googleSignOut();
-      router.replace("/");
     },
   });
 

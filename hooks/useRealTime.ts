@@ -16,7 +16,7 @@ type IncomingMessage = {
   preview: string;
 };
 
-export const useRealtime = () => {
+export const useRealTime = () => {
   const queryClient = useQueryClient();
   const status = useAuthStore((s) => s.status);
 

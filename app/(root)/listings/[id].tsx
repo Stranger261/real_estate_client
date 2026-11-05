@@ -249,7 +249,7 @@ const Property = () => {
                   params: { userId: listing.owner.id },
                 })
               }
-              className="flex-row items-center justify-between rounded-xl bg-white px-4 py-3"
+              className="flex-row flex-1 items-center justify-between rounded-xl bg-white px-4 py-3"
             >
               <View className="gap-0.5">
                 <Text className="font-rubik text-xs text-black-100">
@@ -282,15 +282,11 @@ const Property = () => {
                     {listing.favoriteCount}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color="#8C8E98" />
+                <View>
+                  <Ionicons name="chevron-forward" size={18} color="#8C8E98" />
+                </View>
               </View>
             </Pressable>
-            <View className="flex-row items-center gap-1">
-              <Ionicons name="heart" size={14} color="#F75555" />
-              <Text className="font-rubik text-sm text-black-200">
-                {listing.favoriteCount}
-              </Text>
-            </View>
           </View>
         </View>
       </ScrollView>

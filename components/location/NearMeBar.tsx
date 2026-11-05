@@ -12,7 +12,7 @@ type NearMeBarProps = {
   hideMapLink?: boolean;
 };
 
-const pill = (on: boolean) =>
+export const pill = (on: boolean) =>
   `flex-row items-center gap-1.5 rounded-full border px-4 py-2 ${
     on ? "border-primary-300 bg-primary-300" : "border-primary-200 bg-white"
   }`;

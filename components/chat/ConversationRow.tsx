@@ -19,7 +19,7 @@ export const ConversationRow = ({
   return (
     <Pressable
       onPress={onPress}
-      className="mb-3 flex-row items-center gap-3 rounded-2xl bg-white p-4"
+      className="mb-3 flex-row items-center gap-3 rounded-2xl bg-white p-4 shadow-md"
     >
       {item.other.avatarUrl ? (
         <Image

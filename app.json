@@ -14,7 +14,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#FFFFFF",
+        "googleServicesFile": "./google-services.json"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -73,7 +74,8 @@
           "locationWhenInUsePermission": "Allow RealEstate to use your location to show listings near you."
         }
       ],
-      "@maplibre/maplibre-react-native"
+      "@maplibre/maplibre-react-native",
+      ["expo-notifications", { "color": "#0061FF" }]
     ],
     "experiments": {
       "typedRoutes": true,
