@@ -1,20 +1,22 @@
-import { NotificationItem } from "@/types/notification";
-import { Ionicons } from "@expo/vector-icons";
+import type { Href } from "expo-router";
+import type { Ionicons } from "@expo/vector-icons";
 import type { Area } from "@/lib/invalidate";
-import { Href } from "expo-router";
+import type { NotificationItem } from "@/types/notification";
 
 type Type = NotificationItem["type"];
+type IconName = React.ComponentProps<typeof Ionicons>["name"];
+// both an inbox item and the data of a push fit this
+type RouteSource = { type: Type; data: Record<string, string> };
 
 const ADMIN_SCREENS: Record<string, Href> = {
   verifications: "/admin/verifications",
   "seller-applications": "/admin/seller-applications",
   activity: "/admin/activity",
+  reports: "/admin/reports",
   profile: "/profile",
 };
 
-export const iconFor = (
-  type: Type,
-): React.ComponentProps<typeof Ionicons>["name"] => {
+export const iconFor = (type: Type): IconName => {
   switch (type) {
     case "OFFER_RECEIVED":
       return "cash-outline";
@@ -34,9 +36,12 @@ export const iconFor = (
       return "clipboard-outline";
     case "REVIEW_RECEIVED":
       return "star-outline";
+    case "REPORT_UPDATE":
+      return "flag-outline";
   }
 };
 
+// Which cached data this event just made stale
 export const areasFor = (type: Type): Area[] => {
   switch (type) {
     case "SELLER_APPLICATION":
@@ -49,12 +54,14 @@ export const areasFor = (type: Type): Area[] => {
       return ["admin", "me"];
     case "REVIEW_RECEIVED":
       return ["reviews", "listings"];
+    case "REPORT_UPDATE":
+      return [];
     default:
       return ["transactions", "listings", "favorites"];
   }
 };
 
-export const routeFor = (n: NotificationItem): Href => {
+export const routeFor = (n: RouteSource): Href => {
   switch (n.type) {
     case "SELLER_APPLICATION":
       return "/profile";
@@ -69,6 +76,8 @@ export const routeFor = (n: NotificationItem): Href => {
         pathname: "/reviews/[userId]",
         params: { userId: n.data.userId },
       };
+    case "REPORT_UPDATE":
+      return "/notifications";
     default:
       return "/offers";
   }

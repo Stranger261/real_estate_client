@@ -9,6 +9,7 @@ import { usePullRefresh } from "@/hooks/usePullRefresh";
 import { useRefetchOnFocus } from "@/hooks/useRefetchOnFocus";
 import { useTabBarInset } from "@/hooks/useTabBarInset";
 import { EmptyState } from "@/components/EmptyState";
+import { EnablePushCard } from "@/components/push/EnablePushCard";
 
 export default function Messages() {
   const router = useRouter();
@@ -56,6 +57,7 @@ export default function Messages() {
               }}
             />
           }
+          ListHeaderComponent={<EnablePushCard />}
         />
       </AsyncState>
     </SafeAreaView>

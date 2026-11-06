@@ -16,6 +16,7 @@ import { useRunAction } from "@/hooks/useRunAction";
 import { useChatStore } from "@/stores/chatStore";
 import { makeClientId, messageTime } from "@/utils/chat";
 import { formatPrice } from "@/utils/listing";
+import { ActionMenu } from "@/components/ActionMenu";
 
 const PAGE = 30;
 
@@ -46,6 +47,7 @@ const ChatScreen = () => {
   const [text, setText] = useState("");
   const [pending, setPending] = useState<Pending[]>([]);
   const [focused, setFocused] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const conversation = query.data?.conversation;
   const serverMessages = query.data?.messages;
@@ -161,27 +163,6 @@ const ChatScreen = () => {
     );
   };
 
-  const openMenu = () => {
-    if (!conversation) return;
-    Alert.alert(conversation.other.name, undefined, [
-      {
-        text: "View listing",
-        onPress: () =>
-          router.push({
-            pathname: "/listings/[id]",
-            params: { id: conversation.listing.id },
-          }),
-      },
-      conversation.blockedByMe
-        ? {
-            text: "Unblock",
-            onPress: () => run(() => actions.unblock(conversation.other.id)),
-          }
-        : { text: "Block", style: "destructive", onPress: confirmBlock },
-      { text: "Cancel", style: "cancel" },
-    ]);
-  };
-
   const goBack = () =>
     router.canGoBack() ? router.back() : router.replace("/messages");
 
@@ -210,7 +191,7 @@ const ChatScreen = () => {
           >
             {conversation?.other.name ?? "Chat"}
           </Text>
-          <IconButton onPress={openMenu} className="bg-white">
+          <IconButton onPress={() => setMenuOpen(true)} className="bg-white">
             <Ionicons name="ellipsis-vertical" size={20} color="#191d31" />
           </IconButton>
         </View>
@@ -307,6 +288,48 @@ const ChatScreen = () => {
         </AsyncState>
       </SafeAreaView>
 
+      <ActionMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        options={
+          conversation
+            ? [
+                {
+                  label: "View listing",
+                  icon: "home-outline",
+                  onPress: () =>
+                    router.push({
+                      pathname: "/listings/[id]",
+                      params: { id: conversation.listing.id },
+                    }),
+                },
+                conversation.blockedByMe
+                  ? {
+                      label: "Unblock",
+                      icon: "checkmark-circle-outline",
+                      onPress: () =>
+                        run(() => actions.unblock(conversation.other.id)),
+                    }
+                  : {
+                      label: "Block",
+                      icon: "ban-outline",
+                      danger: true,
+                      onPress: confirmBlock,
+                    },
+                {
+                  label: "Report",
+                  icon: "flag-outline",
+                  danger: true,
+                  onPress: () =>
+                    router.push({
+                      pathname: "/report/[conversationId]",
+                      params: { conversationId: id },
+                    }),
+                },
+              ]
+            : []
+        }
+      />
       {busy && <LoadingOverlay blocking label="Updating..." />}
     </View>
   );

@@ -14,6 +14,7 @@ import { RealTimeBridge } from "@/components/RealTimeBridge";
 import { ToastHost } from "@/components/ToastHost";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useMe } from "@/hooks/useMe";
+import { PushBridge } from "@/components/push/PushBridge";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -53,6 +54,7 @@ const AppShell = ({ fontsReady }: { fontsReady: boolean }) => {
       <Stack screenOptions={{ headerShown: false }} />
       <AuthGate />
       <RealTimeBridge />
+      <PushBridge />
       <ToastHost />
     </View>
   );

@@ -3,6 +3,7 @@ import { client, setAuthFailureHandler } from "@/lib/api";
 import { queryClient } from "@/lib/queryClient";
 import { tokenStorage } from "@/lib/tokenStorage";
 import { create } from "zustand";
+import { unregisterPush } from "@/lib/push";
 
 export interface AuthUser {
   id: string;
@@ -76,6 +77,7 @@ export const useAuthStore = create<AuthState>()((set, get) => {
     signOut: async () => {
       const { refreshToken } = await tokenStorage.get();
       if (refreshToken) {
+        await unregisterPush();
         try {
           await client.POST("/v1/auth/logout", { body: { refreshToken } });
         } catch {

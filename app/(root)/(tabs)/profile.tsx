@@ -14,12 +14,14 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { useUnreadCount } from "@/hooks/useNotifications";
 import { isAdminUser } from "@/utils/admin";
 import { useAuth } from "@/hooks/useAuth";
+import { usePushStore } from "@/stores/pushStore";
 
 export default function Profile() {
   const auth = useAuth();
   const router = useRouter();
   const inset = useTabBarInset();
   const { data: me, isLoading, error, refetch } = useMe();
+  const pushOn = usePushStore((s) => s.permission === "granted" && s.enabled);
   const { data: unread = 0 } = useUnreadCount();
 
   // Seller status changes on the server (an admin approves), so re-check whenever this tab is shown
@@ -97,6 +99,12 @@ export default function Profile() {
               label="Notifications"
               value={unread > 0 ? String(unread) : undefined}
               onPress={() => router.push("/notifications")}
+            />
+            <SettingsRow
+              icon="phone-portrait-outline"
+              label="Push notifications"
+              value={pushOn ? "On" : "Off"}
+              onPress={() => router.push("/push-settings")}
             />
             <SettingsRow
               icon="receipt-outline"

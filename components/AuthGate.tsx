@@ -38,6 +38,8 @@ const PROTECTED_PATHS = [
   "/review",
   "/messages",
   "/chat",
+  "/push-settings",
+  "/report",
 ];
 
 export const AuthGate = () => {
