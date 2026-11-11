@@ -1,6 +1,6 @@
 import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
 import * as Notifications from "expo-notifications";
+import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import { client } from "./api";
 
@@ -29,9 +29,8 @@ export const getPushEnabled = async () =>
 export const setPushEnabled = (on: boolean) =>
   SecureStore.setItemAsync(ENABLED_KEY, on ? "1" : "0");
 
-export const ensureChannels = async () => {
+const ensureChannels = async () => {
   if (Platform.OS !== "android") return;
-
   await Notifications.setNotificationChannelAsync("default", {
     name: "Updates",
     importance: Notifications.AndroidImportance.HIGH,
@@ -60,10 +59,9 @@ export const registerForPush = async ({
     if (permission !== "granted") return null;
 
     const projectId =
-      Constants.expoConfig?.extra?.eas.projectId ??
+      Constants.expoConfig?.extra?.eas?.projectId ??
       Constants.easConfig?.projectId;
     if (!projectId) return null;
-
     const { data: token } = await Notifications.getExpoPushTokenAsync({
       projectId,
     });
@@ -86,6 +84,8 @@ export const unregisterPush = async () => {
   if (!token) return;
   try {
     await client.POST("/v1/push/unregister", { body: { token } });
-  } catch {}
+  } catch {
+    // offline: the server drops dead tokens by itself later
+  }
   await SecureStore.deleteItemAsync(TOKEN_KEY);
 };

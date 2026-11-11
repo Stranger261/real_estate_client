@@ -27,7 +27,7 @@ export const usePushStore = create<PushState>()((set, get) => ({
       getPermission(),
       getPushEnabled(),
     ]);
-    set({ permission, enabled });
+    set({ permission, enabled, loaded: true });
   },
 
   enable: async () => {
