@@ -23,6 +23,8 @@ module.exports = {
           200: "#0061FF1A",
           300: "#0061FF",
         },
+        navy: "#191D31",
+        sky: "#6BA8FF",
         accent: {
           100: "#FBFBFD",
         },

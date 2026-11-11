@@ -13,8 +13,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "monochromeImage": "./assets/images/adaptive-icon-monochrome.png",
+        "backgroundColor": "#0061FF",
         "googleServicesFile": "./google-services.json"
       },
       "edgeToEdgeEnabled": true,
@@ -30,13 +31,13 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash.png",
-          "imageWidth": 220,
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 288,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#FBFBFD",
           "dark": {
-            "enableFullScreenImage_legacy": true,
-            "backgroundColor": "#000000"
+            "image": "./assets/images/splash-icon-dark.png",
+            "backgroundColor": "#191D31"
           }
         }
       ],
@@ -75,7 +76,10 @@
         }
       ],
       "@maplibre/maplibre-react-native",
-      ["expo-notifications", { "color": "#0061FF" }]
+      [
+        "expo-notifications",
+        { "icon": "./assets/images/notification-icon.png", "color": "#0061FF" }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

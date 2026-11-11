@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "703633393398",
+    "project_id": "real-state-app3111",
+    "storage_bucket": "real-state-app3111.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703633393398:android:b70114fe6c830cd7af0ed7",
+        "android_client_info": {
+          "package_name": "com.hubahay.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "703633393398-2go8tl1sbdmlejkuotj4diisbeoousqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFV-quuHAVhAEXWY-bK3XAtaTmqsiO0-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703633393398-2go8tl1sbdmlejkuotj4diisbeoousqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

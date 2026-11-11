@@ -13,7 +13,7 @@ import { SettingsRow } from "@/components/SettingsRow";
 const AdminHome = () => {
   const router = useRouter();
   const query = useAdminOverview();
-  const o = query.data; // may be undefined while loading, so the JSX uses `?.`
+  const o = query.data;
 
   useRefetchOnFocus(query.refetch);
   const { refreshing, onRefresh } = usePullRefresh(query.refetch);
