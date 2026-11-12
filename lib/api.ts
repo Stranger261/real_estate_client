@@ -26,6 +26,8 @@ const NO_REFRESH = [
   "/auth/oauth",
   "/auth/password/forgot",
   "/auth/password/reset",
+  "/v1/auth/password/forgot",
+  "/v1/auth/password",
 ];
 
 const authClient = createClient<paths>({

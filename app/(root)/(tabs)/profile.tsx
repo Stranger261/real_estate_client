@@ -15,6 +15,9 @@ import { useUnreadCount } from "@/hooks/useNotifications";
 import { isAdminUser } from "@/utils/admin";
 import { useAuth } from "@/hooks/useAuth";
 import { usePushStore } from "@/stores/pushStore";
+import { useLogoutEverywhere } from "@/hooks/usePassword";
+import { unregisterPush } from "@/lib/push";
+import { expireSession } from "@/lib/api";
 
 export default function Profile() {
   const auth = useAuth();
@@ -36,6 +39,35 @@ export default function Profile() {
       { text: "Cancel", style: "cancel" },
       { text: "Log out", style: "destructive", onPress: auth.logout },
     ]);
+
+  const logoutEverywhere = useLogoutEverywhere();
+
+  const confirmLogoutEverywhere = () =>
+    Alert.alert(
+      "Log out of all devices?",
+      "You'll be logged out everywhere, including this phone, and will need to log in again.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Log out everywhere",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await unregisterPush();
+              await logoutEverywhere.mutateAsync({});
+            } catch {
+              Alert.alert(
+                "Couldn't log you out everywhere",
+                "Check your connection and try again.",
+              );
+              return;
+            }
+            expireSession();
+            router.replace("/");
+          },
+        },
+      ],
+    );
 
   if (isLoading) return <LoadingOverlay fullScreen />;
 
@@ -105,6 +137,17 @@ export default function Profile() {
               label="Push notifications"
               value={pushOn ? "On" : "Off"}
               onPress={() => router.push("/push-settings")}
+            />
+
+            <SettingsRow
+              icon="lock-closed-outline"
+              label="Change password"
+              onPress={() => router.push("/change-password")}
+            />
+            <SettingsRow
+              icon="log-out-outline"
+              label="Log out of all devices"
+              onPress={confirmLogoutEverywhere}
             />
             <SettingsRow
               icon="receipt-outline"

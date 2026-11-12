@@ -730,7 +730,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Forgot password */
+        /** Email a 6-digit code to reset a password (same answer whether or not the email has an account) */
         post: {
             parameters: {
                 query?: never;
@@ -741,6 +741,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        /** Format: email */
                         email: string;
                     };
                 };
@@ -754,12 +755,17 @@ export interface paths {
                     content: {
                         "application/json": {
                             message: string;
-                            data: {
-                                email: string;
-                                /** @enum {boolean} */
-                                requiresVerification: true;
-                            };
+                            data: Record<string, never>;
                         };
+                    };
+                };
+                /** @description Invalid Input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
                 /** @description Too many requests */
@@ -788,7 +794,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Reset password */
+        /** Choose a new password with the emailed code. Logs the account out everywhere. */
         post: {
             parameters: {
                 query?: never;
@@ -799,6 +805,8 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        /** Format: email */
+                        email: string;
                         code: string;
                         newPassword: string;
                     };
@@ -819,24 +827,6 @@ export interface paths {
                 };
                 /** @description Invalid Input */
                 400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-                /** @description Not allowed */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-                /** @description Not found */
-                404: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -870,7 +860,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Change password */
+        /** Change the password while logged in. Logs the account out everywhere. */
         post: {
             parameters: {
                 query?: never;
@@ -910,6 +900,15 @@ export interface paths {
                 };
                 /** @description Not authenticated */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Too many requests */
+                429: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -5586,6 +5585,54 @@ export interface paths {
                 };
                 /** @description Conflict */
                 409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/logout-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Log out of every device */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                            data: Record<string, never>;
+                        };
+                    };
+                };
+                /** @description Not authenticated */
+                401: {
                     headers: {
                         [name: string]: unknown;
                     };

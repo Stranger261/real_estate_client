@@ -1,4 +1,4 @@
-import { Image, Text, TextInput, View } from "react-native";
+import { Image, Text, TextInput, View, Pressable } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./Button";
 import icons from "@/constants/icons";
@@ -15,6 +15,7 @@ import { useAuthForm } from "@/hooks/useAuthForm";
 import { useAuth } from "@/hooks/useAuth";
 import { LoadingOverlay } from "./LoadingOverlay";
 import LineSeparator from "./LineSeparator";
+import { useRouter } from "expo-router";
 
 export interface FormProp {
   form: ReturnType<typeof useAuthForm>;
@@ -32,6 +33,7 @@ const AuthForm = ({ form }: FormProp) => {
     toggleForm,
     submit,
   } = form;
+  const router = useRouter();
   const { isGoogleLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -53,6 +55,7 @@ const AuthForm = ({ form }: FormProp) => {
           label={isGoogleLoading ? "Opening Google..." : "Please wait..."}
         />
       )}
+
       <FormInput
         value={credentials.email}
         onChangeText={(text) => updateCredentials("email", text)}
@@ -163,7 +166,19 @@ const AuthForm = ({ form }: FormProp) => {
                 Register here.
               </Text>
             </Text>
-            <Text className="font-rubik-semibold">Forgot password</Text>
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/forgot-password",
+                  params: { email: credentials.email },
+                })
+              }
+              hitSlop={8}
+            >
+              <Text className="self-end font-rubik-medium text-sm text-primary-300">
+                Forgot password?
+              </Text>
+            </Pressable>
           </>
         ) : (
           <Text className="font-rubik-light">
