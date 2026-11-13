@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-// A countdown in whole seconds, for "Send a new code in 42s"
 export const useCooldown = (initialSeconds = 0) => {
   const [seconds, setSeconds] = useState(initialSeconds);
 

@@ -41,6 +41,7 @@ const PROTECTED_PATHS = [
   "/push-settings",
   "/report",
   "/change-password",
+  "/add-password",
 ];
 
 export const AuthGate = () => {
