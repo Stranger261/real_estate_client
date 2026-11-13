@@ -40,8 +40,8 @@ const ForgotPassword = () => {
         contentContainerStyle={{ padding: 20, gap: 20, paddingBottom: 40 }}
       >
         <Text className="font-rubik text-base leading-6 text-black-200">
-          Enter the email you signed up with. If it matches an account, we'll
-          send you a 6-digit code to choose a new password.
+          {` Enter the email you signed up with. If it matches an account, we'll
+          send you a 6-digit code to choose a new password.`}
         </Text>
 
         <TextField

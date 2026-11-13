@@ -16,8 +16,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-console.log(Notifications.getExpoPushTokenAsync());
-
 export type PushPermission = "granted" | "askable" | "blocked";
 
 export const getPermission = async (): Promise<PushPermission> => {

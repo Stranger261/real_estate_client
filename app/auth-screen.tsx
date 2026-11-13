@@ -9,11 +9,9 @@ import {
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { BackButton } from "@/components/BackButton";
-import { router, useLocalSearchParams } from "expo-router";
-import { NoticeBanner } from "@/components/password/NoticeBanner";
+import { router } from "expo-router";
 
 const SignIn = () => {
-  const { notice } = useLocalSearchParams<{ notice?: string }>();
   const form = useAuthForm();
   const insets = useSafeAreaInsets();
 
