@@ -1,16 +1,17 @@
+// app/admin/index.tsx (the whole file)
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { AdminOnly } from "@/components/admin/AdminOnly";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import { SettingsRow } from "@/components/SettingsRow";
 import { StatCard } from "@/components/StatCard";
 import { AsyncState } from "@/components/StateViews";
 import { useAdminOverview } from "@/hooks/useAdmin";
 import { usePullRefresh } from "@/hooks/usePullRefresh";
 import { useRefetchOnFocus } from "@/hooks/useRefetchOnFocus";
-import { SettingsRow } from "@/components/SettingsRow";
 
-const AdminHome = () => {
+export default function AdminHome() {
   const router = useRouter();
   const query = useAdminOverview();
   const o = query.data;
@@ -30,20 +31,14 @@ const AdminHome = () => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
           >
-            <View className="overflow-hidden rounded-2xl bg-white">
-              <SettingsRow
-                icon="construct-outline"
-                label="Moderation"
-                onPress={() => router.push("/admin/moderation")}
-              />
-              <SettingsRow
-                icon="time-outline"
-                label="Activity log"
-                onPress={() => router.push("/admin/activity")}
-              />
-            </View>
-
             <View className="flex-row flex-wrap gap-3">
+              <StatCard
+                icon="flag-outline"
+                label="Open reports"
+                value={o?.openReports ?? 0}
+                highlight={(o?.openReports ?? 0) > 0}
+                onPress={() => router.push("/admin/reports")}
+              />
               <StatCard
                 icon="storefront-outline"
                 label="Seller applications"
@@ -76,11 +71,22 @@ const AdminHome = () => {
                 {o?.bannedUsers} banned users
               </Text>
             )}
+
+            <View className="overflow-hidden rounded-2xl bg-white">
+              <SettingsRow
+                icon="construct-outline"
+                label="Moderation"
+                onPress={() => router.push("/admin/moderation")}
+              />
+              <SettingsRow
+                icon="time-outline"
+                label="Activity log"
+                onPress={() => router.push("/admin/activity")}
+              />
+            </View>
           </ScrollView>
         </AsyncState>
       </SafeAreaView>
     </AdminOnly>
   );
-};
-
-export default AdminHome;
+}

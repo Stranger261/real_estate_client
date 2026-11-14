@@ -61,6 +61,7 @@ export const registerForPush = async ({
     const projectId =
       Constants.expoConfig?.extra?.eas?.projectId ??
       Constants.easConfig?.projectId;
+
     if (!projectId) return null;
     const { data: token } = await Notifications.getExpoPushTokenAsync({
       projectId,

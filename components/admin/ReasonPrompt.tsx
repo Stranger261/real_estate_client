@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/TextField";
+import { ModalShell } from "../ui/ModalShell";
 
 type ReasonPromptProps = {
   title: string;
@@ -22,10 +23,7 @@ export const ReasonPrompt = ({
   const valid = reason.trim().length >= 3;
 
   return (
-    <View
-      style={[StyleSheet.absoluteFill, { zIndex: 40, elevation: 40 }]}
-      className="bg-black-300/50 px-5 pt-24"
-    >
+    <ModalShell>
       <View className="gap-4 rounded-2xl bg-white p-5">
         <View className="gap-1">
           <Text className="font-rubik-bold text-lg text-black-300">
@@ -62,6 +60,6 @@ export const ReasonPrompt = ({
           />
         </View>
       </View>
-    </View>
+    </ModalShell>
   );
 };
