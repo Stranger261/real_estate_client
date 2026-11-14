@@ -4,6 +4,7 @@ let configured = false;
 
 const loadGoogle = async () => {
   let mod: typeof import("@react-native-google-signin/google-signin");
+
   try {
     mod = await import("@react-native-google-signin/google-signin");
   } catch {
@@ -13,11 +14,19 @@ const loadGoogle = async () => {
   }
 
   if (!configured) {
+    const webClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+
+    if (!webClientId) {
+      throw new Error("Google Web Client ID is missing.");
+    }
+
     mod.GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID!,
+      webClientId,
     });
+
     configured = true;
   }
+
   return mod;
 };
 

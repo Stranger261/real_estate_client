@@ -51,7 +51,23 @@ const AppShell = ({ fontsReady }: { fontsReady: boolean }) => {
   return (
     <View style={{ flex: 1 }} onLayout={hideSplash}>
       <StatusBar hidden />
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: "slide_from_right",
+          animationDuration: 260,
+          contentStyle: { backgroundColor: "#FBFBFD" },
+        }}
+      >
+        <Stack.Screen
+          name="auth-screen"
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="(root)/payment/[transactionId]"
+          options={{ animation: "fade_from_bottom" }}
+        />
+      </Stack>
       <AuthGate />
       <RealTimeBridge />
       <PushBridge />
@@ -65,7 +81,7 @@ export default function RootLayout() {
     "Rubik-Bold": require("../assets/fonts/Rubik-Bold.ttf"),
     "Rubik-ExtraBold": require("../assets/fonts/Rubik-ExtraBold.ttf"),
     "Rubik-Light": require("../assets/fonts/Rubik-Light.ttf"),
-    "Rubik-Medium": require("../assets/fonts/Rubik-Regular.ttf"),
+    "Rubik-Medium": require("../assets/fonts/Rubik-Medium.ttf"),
     "Rubik-Regular": require("../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-SemiBold": require("../assets/fonts/Rubik-SemiBold.ttf"),
   });

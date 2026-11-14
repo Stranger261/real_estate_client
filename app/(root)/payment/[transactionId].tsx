@@ -1,41 +1,38 @@
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Ionicons } from "@expo/vector-icons";
-import { Button } from "@/components/Button";
+
 import { LoadingOverlay } from "@/components/LoadingOverlay";
+import { ErrorState } from "@/components/ErrorState";
+import { PaymentStatusView } from "@/components/payment/PaymentStatusView";
+
 import { $api } from "@/lib/query";
 import { errorMessage } from "@/lib/errors";
-import { formatDate } from "@/utils/date";
 import { formatMoney } from "@/utils/money";
-import { ErrorState } from "@/components/ErrorState";
 import { invalidateAreas } from "@/lib/invalidate";
 
 const POLL_MS = 2000;
 const GIVE_UP_MS = 30_000;
 
-const Row = ({ label, value }: { label: string; value: string }) => (
-  <View className="flex-row justify-between">
-    <Text className="font-rubik text-sm text-black-200">{label}</Text>
-    <Text className="font-rubik-medium text-sm text-black-300">{value}</Text>
-  </View>
-);
-
 const PaymentResult = () => {
-  const { transactionId } = useLocalSearchParams<{ transactionId: string }>();
+  const { transactionId } = useLocalSearchParams<{
+    transactionId: string;
+  }>();
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const [timedOut, setTimedOut] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
+  // Keep existing timeout behavior
   useEffect(() => {
     const id = setTimeout(() => setTimedOut(true), GIVE_UP_MS);
     return () => clearTimeout(id);
   }, [attempt]);
 
+  // Keep existing polling behavior
   const query = $api.useQuery(
     "get",
     "/v1/transactions/{transactionId}",
@@ -44,22 +41,49 @@ const PaymentResult = () => {
       select: (res) => res.data.transaction,
       refetchInterval: (q) => {
         const t = q.state.data?.data.transaction;
+
         const settled =
           !!t && (t.status !== "PENDING" || t.paymentStatus === "FAILED");
+
         return settled || timedOut ? false : POLL_MS;
       },
     },
   );
+
   const t = query.data;
+
   const confirmed = t?.status === "CONFIRMED" || t?.status === "COMPLETED";
 
+  // Map transaction status to PaymentStatusView state
+  const state = (() => {
+    if (confirmed) return "success" as const;
+
+    if (t?.status === "REJECTED" || t?.status === "CANCELLED") {
+      return t.paymentStatus === "REFUNDED"
+        ? ("refunded" as const)
+        : ("failed" as const);
+    }
+
+    // Special case: payment failed but transaction is still pending
+    if (t?.status === "PENDING" && t.paymentStatus === "FAILED") {
+      return "failed" as const;
+    }
+
+    return timedOut ? ("slow" as const) : ("processing" as const);
+  })();
+
+  // Keep existing cache invalidation
   useEffect(() => {
-    if (confirmed)
+    if (confirmed) {
       invalidateAreas(queryClient, "transactions", "listings", "favorites");
+    }
   }, [confirmed, queryClient]);
 
-  if (query.isLoading)
+  // Keep loading and error states
+  if (query.isLoading) {
     return <LoadingOverlay fullScreen label="Confirming your payment..." />;
+  }
+
   if (query.error && !t) {
     return (
       <ErrorState
@@ -69,137 +93,73 @@ const PaymentResult = () => {
       />
     );
   }
+
   if (!t) return null;
 
-  const screen = (
-    icon: React.ComponentProps<typeof Ionicons>["name"],
-    color: string,
-    title: string,
-    body: string,
-    extra?: React.ReactNode,
-  ) => (
-    <SafeAreaView className="flex-1 bg-accent-100">
-      <View className="flex-1 items-center justify-center gap-4 px-6">
-        <Ionicons name={icon} size={64} color={color} />
-        <Text className="text-center font-rubik-bold text-2xl text-black-300">
-          {title}
-        </Text>
-        <Text className="text-center font-rubik text-base leading-6 text-black-200">
-          {body}
-        </Text>
-        {extra}
-      </View>
-    </SafeAreaView>
-  );
+  // Navigate back to the transaction's listing
+  const goBackToListing = () => {
+    router.replace({
+      pathname: "/listings/[id]",
+      params: { id: t.listing.id },
+    });
+  };
 
-  if (confirmed) {
-    return (
+  return (
+    <>
+      <Stack.Screen options={{ gestureEnabled: false }} />
       <SafeAreaView className="flex-1 bg-accent-100">
-        <View className="flex-1 items-center justify-center gap-4 px-6">
-          <Ionicons name="checkmark-circle" size={72} color="#0061FF" />
-          <Text className="text-center font-rubik-bold text-2xl text-black-300">
-            Payment received
-          </Text>
-          <Text className="text-center font-rubik text-base leading-6 text-black-200">
-            {`Your offer for "${t.listing.title}" is confirmed.`}
-          </Text>
-
-          <View className="w-full gap-3 rounded-2xl bg-white p-4">
-            <Row
-              label="Down payment paid"
-              value={formatMoney(t.downPaymentAmount)}
-            />
-            <Row label="Total" value={formatMoney(t.priceAtTransaction)} />
-            {t.leaseStartDate && t.leaseEndDate && (
-              <Row
-                label="Lease"
-                value={`${formatDate(t.leaseStartDate)} to ${formatDate(t.leaseEndDate)}`}
-              />
-            )}
-          </View>
-        </View>
-
-        <View className="gap-3 px-5 pb-6">
-          <Button
-            label="View listing"
-            onPress={() =>
-              router.replace({
-                pathname: "/listings/[id]",
-                params: { id: t.listing.id },
-              })
-            }
-            className="rounded-full bg-primary-300 py-4"
-            textClassName="font-rubik-semibold text-white"
-          />
-          <Button
-            label="Back to home"
-            onPress={() => router.replace("/home")}
-            className="rounded-full border border-primary-300 py-4"
-            textClassName="font-rubik-semibold text-primary-300"
-          />
-        </View>
+        <PaymentStatusView
+          state={state}
+          details={[
+            {
+              label: "Down payment paid",
+              value: formatMoney(t.downPaymentAmount),
+            },
+            {
+              label: "Total",
+              value: formatMoney(t.priceAtTransaction),
+            },
+            ...(t.leaseStartDate && t.leaseEndDate
+              ? [
+                  {
+                    label: "Lease",
+                    value: `${t.leaseStartDate} to ${t.leaseEndDate}`,
+                  },
+                ]
+              : []),
+          ]}
+          primary={
+            state === "success"
+              ? {
+                  label: "View listing",
+                  onPress: goBackToListing,
+                }
+              : state === "slow"
+                ? {
+                    label: "Check again",
+                    onPress: () => {
+                      setTimedOut(false);
+                      setAttempt((a) => a + 1);
+                      query.refetch();
+                    },
+                  }
+                : {
+                    label: "Back to listing",
+                    onPress: goBackToListing,
+                  }
+          }
+          secondary={
+            state === "success"
+              ? {
+                  label: "Back to home",
+                  onPress: () => router.replace("/home"),
+                }
+              : undefined
+          }
+        />
       </SafeAreaView>
-    );
-  }
-
-  if (t.status === "PENDING" && t.paymentStatus === "FAILED") {
-    return screen(
-      "close-circle",
-      "#F75555",
-      "Payment failed",
-      "Your card wasn't charged. Go back and try again.",
-      <Button
-        label="Back to listing"
-        onPress={() =>
-          router.replace({
-            pathname: "/listings/[id]",
-            params: { id: t.listing.id },
-          })
-        }
-        className="rounded-full bg-primary-300 px-8 py-3"
-        textClassName="font-rubik-semibold text-white"
-      />,
-    );
-  }
-
-  if (t.status === "CANCELLED" || t.status === "REJECTED") {
-    return screen(
-      "alert-circle",
-      "#F75555",
-      "This offer is no longer active",
-      t.paymentStatus === "REFUNDED"
-        ? "Someone else got there first. Your down payment has been refunded."
-        : "It was cancelled or rejected before it was confirmed.",
-      <Button
-        label="Back to home"
-        onPress={() => router.replace("/home")}
-        className="rounded-full bg-primary-300 px-8 py-3"
-        textClassName="font-rubik-semibold text-white"
-      />,
-    );
-  }
-
-  // Still PENDING
-  if (timedOut) {
-    return screen(
-      "time-outline",
-      "#0061FF",
-      "Still confirming your payment",
-      "This is taking longer than usual. Your card is only charged once, and this screen will update when the payment is confirmed.",
-      <Button
-        label="Check again"
-        onPress={() => {
-          setTimedOut(false);
-          setAttempt((a) => a + 1);
-          query.refetch();
-        }}
-        className="rounded-full bg-primary-300 px-8 py-3"
-        textClassName="font-rubik-semibold text-white"
-      />,
-    );
-  }
-
-  return <LoadingOverlay fullScreen label="Confirming your payment..." />;
+    </>
+  );
 };
 
 export default PaymentResult;

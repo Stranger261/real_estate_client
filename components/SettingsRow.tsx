@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { PressableScale } from "./ui/PressableScale";
 
 type SettingsRowProps = {
   icon: React.ComponentProps<typeof Ionicons>["name"];
@@ -16,7 +17,7 @@ export const SettingsRow = ({
   onPress,
   danger,
 }: SettingsRowProps) => (
-  <Pressable
+  <PressableScale
     onPress={onPress}
     disabled={!onPress}
     className="flex-row items-center gap-3 px-4 py-4 active:bg-primary-100"
@@ -35,5 +36,5 @@ export const SettingsRow = ({
     {onPress && !danger && (
       <Ionicons name="chevron-forward" size={18} color="#8C8E98" />
     )}
-  </Pressable>
+  </PressableScale>
 );

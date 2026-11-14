@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "703633393398-sic3l180oavhjmnvh2p35ttutljbcorf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hubahay.app",
+            "certificate_hash": "abfb22abf8b57a85eded61a8e2c7c94c70fcc23a"
+          }
+        },
+        {
           "client_id": "703633393398-2go8tl1sbdmlejkuotj4diisbeoousqf.apps.googleusercontent.com",
           "client_type": 3
         }

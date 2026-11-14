@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "HUBahay",
-    "slug": "real_state_app",
+    "slug": "stranger261",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,12 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
-      "package": "com.hubahay.app"
+      "package": "com.hubahay.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "output": "static",
@@ -78,7 +83,10 @@
       "@maplibre/maplibre-react-native",
       [
         "expo-notifications",
-        { "icon": "./assets/images/notification-icon.png", "color": "#0061FF" }
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#0061FF"
+        }
       ]
     ],
     "experiments": {
@@ -88,8 +96,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "aa1299d7-064b-451e-bf98-8460d358e27e"
+        "projectId": "6244c81e-d76e-44a9-b8b1-b1fd8ee8e99f"
       }
-    }
+    },
+    "owner": "carloapp261s-team"
   }
 }

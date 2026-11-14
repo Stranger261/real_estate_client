@@ -9,11 +9,20 @@ import {
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { BackButton } from "@/components/BackButton";
-import { router } from "expo-router";
+import { NoticeBanner } from "@/components/password/NoticeBanner";
+import { router, useLocalSearchParams } from "expo-router";
+
+// Shown above the form after a password reset or change (set by those screens)
+const NOTICES: Record<string, string> = {
+  "password-reset": "Your password was updated. Log in with your new password.",
+  "password-changed": "Your password was changed. Please log in again.",
+};
 
 const SignIn = () => {
   const form = useAuthForm();
   const insets = useSafeAreaInsets();
+  const { notice } = useLocalSearchParams<{ notice?: string }>();
+  const noticeText = notice ? NOTICES[notice] : undefined;
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -33,6 +42,16 @@ const SignIn = () => {
           className="w-full h-96"
           resizeMode="contain"
         />
+
+        {noticeText && (
+          <Animated.View
+            entering={FadeInDown.delay(150).duration(350)}
+            className="px-10 pt-2"
+          >
+            <NoticeBanner text={noticeText} />
+          </Animated.View>
+        )}
+
         <View className="px-10 my-5">
           <Animated.View
             key={form.formType}

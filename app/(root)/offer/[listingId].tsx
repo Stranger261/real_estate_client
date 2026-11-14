@@ -131,7 +131,12 @@ const OfferScreen = () => {
   }
 
   if (paying) {
-    return <LoadingOverlay blocking label="Preparing payment..." />;
+    return (
+      <LoadingOverlay
+        blocking
+        messages={["Checking availability", "Preparing your secure payment"]}
+      />
+    );
   }
 
   return (

@@ -63,10 +63,8 @@ export const AuthGate = () => {
       if (pathname === "/" || pathname === LOGIN || pathname === VERIFY)
         router.replace("/home");
     } else if (status === "unauthenticated") {
-      if (status === "unauthenticated") {
-        if (onTabs || onProtected || pathname === VERIFY) {
-          router.replace(LOGIN);
-        }
+      if (onTabs || onProtected || pathname === VERIFY) {
+        router.replace(LOGIN);
       }
     }
   }, [status, pathname, router]);

@@ -32,6 +32,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useListingConversation } from "@/hooks/useChat";
+import { Pop } from "@/components/ui/Pop";
 
 const HERO_HEIGHT = 300;
 const UNAVAILABLE_TEXT: Record<string, string> = {
@@ -277,7 +278,9 @@ const Property = () => {
               </View>
               <View className="flex-row items-center gap-3">
                 <View className="flex-row items-center gap-1">
-                  <Ionicons name="heart" size={14} color="#F75555" />
+                  <Pop trigger={isFavorited}>
+                    <Ionicons name="heart" size={14} color="#F75555" />
+                  </Pop>
                   <Text className="font-rubik text-sm text-black-200">
                     {listing.favoriteCount}
                   </Text>

@@ -3,6 +3,8 @@ import { ListingSearch, useListings } from "@/hooks/useListings";
 import { ListingCard } from "./ListingCard";
 import { AsyncState } from "../StateViews";
 import { EmptyState } from "../EmptyState";
+import { ListSkeleton } from "../ui/Skeleton";
+import { Stagger } from "../ui/Stagger";
 
 const Feed = ({
   search,
@@ -18,12 +20,18 @@ const Feed = ({
   const query = useListings(search);
   const { data: listings, isRefetching, isPlaceholderData, refetch } = query;
 
+  if (query.isLoading) return <ListSkeleton />;
+
   return (
     <AsyncState query={query}>
       <FlatList
         data={listings}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ListingCard listing={item} />}
+        renderItem={({ item, index }) => (
+          <Stagger id={item.id} index={index}>
+            <ListingCard listing={item} />
+          </Stagger>
+        )}
         contentContainerStyle={{
           paddingHorizontal: 20,
           paddingBottom: bottomInset,

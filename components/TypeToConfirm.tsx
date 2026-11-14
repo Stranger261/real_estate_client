@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/TextField";
+import { ModalShell } from "@/components/ui/ModalShell";
 
 type TypeToConfirmProps = {
   title: string;
@@ -13,6 +14,7 @@ type TypeToConfirmProps = {
   onCancel: () => void;
 };
 
+// For actions that are hard to undo: you type the person's email to go ahead
 export const TypeToConfirm = ({
   title,
   message,
@@ -26,10 +28,7 @@ export const TypeToConfirm = ({
   const matches = value.trim().toLowerCase() === expected.toLowerCase();
 
   return (
-    <View
-      style={[StyleSheet.absoluteFill, { zIndex: 40, elevation: 40 }]}
-      className="bg-black-300/50 px-5 pt-24"
-    >
+    <ModalShell onRequestClose={onCancel}>
       <View className="gap-4 rounded-2xl bg-white p-5">
         <View className="gap-1">
           <Text className="font-rubik-bold text-lg text-black-300">
@@ -66,6 +65,6 @@ export const TypeToConfirm = ({
           />
         </View>
       </View>
-    </View>
+    </ModalShell>
   );
 };
